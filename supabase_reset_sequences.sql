@@ -1,0 +1,12 @@
+SELECT setval(pg_get_serial_sequence('public.students', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.students;
+SELECT setval(pg_get_serial_sequence('public.events', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.events;
+SELECT setval(pg_get_serial_sequence('public.event_attendance', 'attendance_id'), COALESCE(MAX(attendance_id), 1), MAX(attendance_id) IS NOT NULL) FROM public.event_attendance;
+SELECT setval(pg_get_serial_sequence('public.fines', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.fines;
+SELECT setval(pg_get_serial_sequence('public.payments', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.payments;
+SELECT setval(pg_get_serial_sequence('public.ssc_users', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.ssc_users;
+SELECT setval(pg_get_serial_sequence('public.admin_users', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.admin_users;
+SELECT setval(pg_get_serial_sequence('public.event_requests', 'event_request_id'), COALESCE(MAX(event_request_id), 1), MAX(event_request_id) IS NOT NULL) FROM public.event_requests;
+SELECT setval(pg_get_serial_sequence('public.activity_logs', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.activity_logs;
+SELECT setval(pg_get_serial_sequence('public.notifications', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.notifications;
+SELECT setval(pg_get_serial_sequence('public.attendance_corrections', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.attendance_corrections;
+SELECT setval(pg_get_serial_sequence('public.school_announcements', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM public.school_announcements;

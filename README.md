@@ -1,0 +1,52 @@
+# SSC Event Attendance
+
+A separate event-based attendance module that follows the existing `system` Tailwind/violet admin style without modifying the `system` folder.
+
+## Routes
+
+- `/SSCAttendance/` - active event status and scanner entry point
+- `/SSCAttendance/scan.php` - QR/barcode keyboard scanner
+- `/SSCAttendance/admin/` - SSC dashboard
+- `admin/events.php` - create, activate, register, and close events
+- `admin/attendance.php` - filter attendance by event, status, or student
+- `admin/payments.php` - record partial/full payments and view history
+- `admin/clearance.php` - sign only when outstanding balance is zero
+
+## Supabase setup
+
+The application connects server-side to Supabase PostgreSQL using PDO. It needs a PHP host that supports `pdo_pgsql`; Supabase hosts the database, not the PHP pages.
+
+1. Create a fresh Supabase project and run `supabase_schema.sql` in its SQL Editor. The script creates the app tables; it does not alter existing tables to migrate their structure.
+2. Configure these environment variables on the PHP web host using the project's PostgreSQL connection details:
+   - `SUPABASE_DB_HOST`
+   - `SUPABASE_DB_NAME` (normally `postgres`)
+   - `SUPABASE_DB_USER`
+   - `SUPABASE_DB_PASSWORD`
+   - `SUPABASE_DB_PORT` (normally `5432`)
+   - `SUPABASE_DB_SSLMODE` (normally `require`)
+   
+   For XAMPP networks that use IPv4, choose **Session pooler** in Supabase's **Connect** dialog and copy its host and user values. The pooler username includes the project reference (for example, `postgres.<project-ref>`). Direct database connections may require IPv6; use the connection method that matches the PHP host's network.
+3. Enable PHP's `pdo_pgsql` extension and deploy the PHP project to a PHP-capable web host. In XAMPP, enable `extension=pdo_pgsql` in the active `php.ini`, then restart Apache.
+4. Open `/SSCAttendance/login.php`, then create an event, enable `Register all students`, and activate it.
+
+Keep the database password only in server-side environment settings. Do not put it in browser JavaScript, commit it, or use a Supabase `anon`/`service_role` API key as the PostgreSQL password.
+
+### Vercel deployment
+
+Vercel does not provide an official PHP runtime. This project uses the community-maintained `vercel-php` runtime; verify that runtime is available to your Vercel account before deploying. The `vercel.json` catch-all routes requests through `api/index.php`, which dispatches PHP pages and serves the app's static asset directories. On Vercel, PHP sessions are stored in the Supabase `app_sessions` table rather than a temporary function filesystem.
+
+Production URL: https://ssc-attendance-opal.vercel.app
+
+Before deploying:
+
+1. Run the `app_sessions` table and index statements from `supabase_schema.sql` in the existing Supabase project's SQL Editor.
+2. Link this project to a Vercel project, then set `SUPABASE_DB_HOST`, `SUPABASE_DB_NAME`, `SUPABASE_DB_USER`, `SUPABASE_DB_PASSWORD`, `SUPABASE_DB_PORT`, and `SUPABASE_DB_SSLMODE` for Production and any preview environments you use. Use the Supabase session-pooler host/user and keep the password as a server-side secret.
+3. Deploy with the Vercel CLI or connect a Git repository. Test login, logout, scanning, redirects, and nested static assets on the deployed URL before sharing it.
+
+### Moving existing MySQL records
+
+`schema.sql` is the legacy XAMPP/MySQL schema. It is not the schema to import into Supabase. First create the PostgreSQL tables with `supabase_schema.sql`, then export the existing MySQL tables as CSV and import them into their matching Supabase tables. Import parent tables before dependent tables: `students`, `events`, `ssc_users`, and `admin_users`; then `event_students`, `event_attendance`, `fines`, `clearance`, `event_requests`, `payments`, `activity_logs`, `notifications`, `ssc_settings`, `attendance_corrections`, and `school_announcements`. Preserve each table's primary-key IDs so the foreign keys continue to match. If the old database uses `scc_users` or `scc_settings`, import those rows into `ssc_users` or `ssc_settings`; map a legacy `scc_user_id` column to `ssc_user_id` for `event_requests`. If both `announcements` and `school_announcements` exist, combine them into `school_announcements`; convert legacy priority labels `LOW`, `NORMAL`, `HIGH`, and `URGENT` to numeric priorities `1`, `5`, `8`, and `10`, and assign a new ID where the two tables' IDs collide. Map legacy activity-log actor type `SCC` (or blank when the entity is `ssc_user`) to `SSC`. Do not overwrite a Supabase project that already contains records.
+
+After importing rows with explicit IDs, run `supabase_reset_sequences.sql` in the Supabase SQL Editor before the app creates records. Verify student, event, attendance, user, and payment counts in Supabase before switching the live site. Export files contain student information and password hashes; store them securely and delete temporary exports after the migration.
+
+The PHP application uses the direct table names `events`, `event_students`, `event_attendance`, `fines`, `payments`, and `clearance`; student records remain in the same PostgreSQL database so attendance foreign keys stay connected. Scan decisions are validated in `api/scan.php`, including active event, registration, scan windows, one record per event, scan-in-before-scan-out, and duplicate scan-out rules.
