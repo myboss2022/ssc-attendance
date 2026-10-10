@@ -24,6 +24,7 @@ $tickerSpeed = max(12, min(80, (int) get_ssc_setting('ticker_speed', '24')));
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo h($organizationName); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="assets/app.js?v=20261011-loading" defer></script>
     <style>
         html { scroll-behavior: smooth; }
         body { font-family: Arial, Helvetica, sans-serif; overflow-x: hidden; padding-bottom: 5rem; }
