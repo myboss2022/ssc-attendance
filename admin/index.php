@@ -1,28 +1,43 @@
 <?php
 require_once dirname(__DIR__).'/config.php';
 $conn = db();
-function metric($conn, $sql) { $row = $conn->query($sql)->fetch_assoc(); return (int)($row['value'] ?? 0); }
 $active = active_event($conn);
 $upcomingEvents = $conn->query("SELECT event_name,event_date,start_time,end_time,venue,status FROM events WHERE status IN ('UPCOMING','DRAFT') AND (event_date + start_time) >= NOW() ORDER BY event_date ASC, start_time ASC LIMIT 1");
 $systemTitle = get_ssc_setting('organization_name', 'Student Entry and Exit Using a Barcode and SMS Integration System');
 $metrics = [
-	['Total Students', "SELECT COUNT(*) value FROM students", 'bg-white'],
-	['Total SSC Users', "SELECT COUNT(*) value FROM ssc_users", 'bg-white'],
-	['Total Events', "SELECT COUNT(*) value FROM events", 'bg-white'],
-	['Active Events', "SELECT COUNT(*) value FROM events WHERE status='ACTIVE'", 'bg-emerald-50'],
-	['Completed Events', "SELECT COUNT(*) value FROM events WHERE status IN ('COMPLETED','CLOSED')", 'bg-white'],
-	['Present Students', "SELECT COUNT(*) value FROM event_attendance WHERE attendance_status='PRESENT'", 'bg-emerald-50'],
-	['Absent Students', "SELECT COUNT(*) value FROM event_attendance WHERE attendance_status='ABSENT'", 'bg-rose-50'],
-	['Late Students', "SELECT COUNT(*) value FROM event_attendance WHERE attendance_status='LATE'", 'bg-amber-50'],
-	['Excused Students', "SELECT COUNT(*) value FROM event_attendance WHERE attendance_status='EXCUSED'", 'bg-white'],
-	['Students With Unpaid Fines', "SELECT COUNT(DISTINCT student_id) value FROM fines WHERE status IN ('UNPAID','PARTIALLY PAID')", 'bg-rose-50'],
-	['Total Unpaid Fines', "SELECT COUNT(*) value FROM fines WHERE status IN ('UNPAID','PARTIALLY PAID')", 'bg-rose-50'],
-	['Total Paid Fines', "SELECT COUNT(*) value FROM fines WHERE status='PAID'", 'bg-emerald-50'],
-	['Pending Clearances', "SELECT COUNT(*) value FROM clearance WHERE status='PENDING'", 'bg-white'],
-	['Clearance On Hold', "SELECT COUNT(*) value FROM clearance WHERE status='ON HOLD'", 'bg-rose-50'],
-	['Signed Clearances', "SELECT COUNT(*) value FROM clearance WHERE status='SIGNED'", 'bg-emerald-50']
+	['Total Students', 'total_students', 'bg-white'],
+	['Total SSC Users', 'total_ssc_users', 'bg-white'],
+	['Total Events', 'total_events', 'bg-white'],
+	['Active Events', 'active_events', 'bg-emerald-50'],
+	['Completed Events', 'completed_events', 'bg-white'],
+	['Present Students', 'present_students', 'bg-emerald-50'],
+	['Absent Students', 'absent_students', 'bg-rose-50'],
+	['Late Students', 'late_students', 'bg-amber-50'],
+	['Excused Students', 'excused_students', 'bg-white'],
+	['Students With Unpaid Fines', 'students_with_unpaid_fines', 'bg-rose-50'],
+	['Total Unpaid Fines', 'total_unpaid_fines', 'bg-rose-50'],
+	['Total Paid Fines', 'total_paid_fines', 'bg-emerald-50'],
+	['Pending Clearances', 'pending_clearances', 'bg-white'],
+	['Clearance On Hold', 'clearance_on_hold', 'bg-rose-50'],
+	['Signed Clearances', 'signed_clearances', 'bg-emerald-50']
 ];
-foreach ($metrics as &$item) { $item[1] = metric($conn, $item[1]); }
+$stats = $conn->query("SELECT
+	(SELECT COUNT(*) FROM students) AS total_students,
+	(SELECT COUNT(*) FROM ssc_users) AS total_ssc_users,
+	(SELECT COUNT(*) FROM events) AS total_events,
+	(SELECT COUNT(*) FROM events WHERE status='ACTIVE') AS active_events,
+	(SELECT COUNT(*) FROM events WHERE status IN ('COMPLETED','CLOSED')) AS completed_events,
+	(SELECT COUNT(*) FROM event_attendance WHERE attendance_status='PRESENT') AS present_students,
+	(SELECT COUNT(*) FROM event_attendance WHERE attendance_status='ABSENT') AS absent_students,
+	(SELECT COUNT(*) FROM event_attendance WHERE attendance_status='LATE') AS late_students,
+	(SELECT COUNT(*) FROM event_attendance WHERE attendance_status='EXCUSED') AS excused_students,
+	(SELECT COUNT(DISTINCT student_id) FROM fines WHERE status IN ('UNPAID','PARTIALLY PAID')) AS students_with_unpaid_fines,
+	(SELECT COUNT(*) FROM fines WHERE status IN ('UNPAID','PARTIALLY PAID')) AS total_unpaid_fines,
+	(SELECT COUNT(*) FROM fines WHERE status='PAID') AS total_paid_fines,
+	(SELECT COUNT(*) FROM clearance WHERE status='PENDING') AS pending_clearances,
+	(SELECT COUNT(*) FROM clearance WHERE status='ON HOLD') AS clearance_on_hold,
+	(SELECT COUNT(*) FROM clearance WHERE status='SIGNED') AS signed_clearances")->fetch_assoc();
+foreach ($metrics as &$item) { $item[1] = (int)($stats[$item[1]] ?? 0); }
 $pageTitle='Admin Dashboard'; ob_start();
 ?>
 <div class="space-y-6">

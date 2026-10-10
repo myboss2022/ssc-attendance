@@ -37,6 +37,7 @@ $tickerSpeed = max(10, min(90, (int)get_ssc_setting('ticker_speed', '30')));
   .hero-modal>.mt-7.grid>a>div:first-child>div:first-child{min-width:0}
   .hero-modal>.mt-7.grid>a .text-lg,.hero-modal>.mt-7.grid>a .text-xl{min-width:0;overflow-wrap:anywhere;white-space:normal;font-size:1rem;line-height:1.25}
   .hero-modal>.mt-7.grid>a>div:first-child>div:last-child{display:flex;flex-shrink:0;margin-top:0;gap:.45rem}
+  .hero-modal>.mt-7.grid>a[href="admin/index.php"]>div:first-child>div:last-child{width:100%;justify-content:center;text-align:center;white-space:normal;flex-shrink:1}
   .hero-modal>.mt-7.grid>a>div:last-child{min-width:0;margin-top:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
   .hero-modal>.mt-7.grid>a>div:last-child>span:first-child{min-width:0;overflow-wrap:anywhere;white-space:normal;font-size:.75rem}
   .hero-modal>.mt-6.grid{grid-template-columns:minmax(0,1fr)!important}

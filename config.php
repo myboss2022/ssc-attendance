@@ -54,7 +54,24 @@ function db() {
     return $conn;
 }
 function finalize_expired_events($conn) {
-    $overnight = overnight_events_enabled() ? 1 : 0;
+    $check = $conn->query("WITH settings AS (
+        SELECT COALESCE((SELECT setting_value FROM ssc_settings WHERE setting_key='overnight_events' LIMIT 1), '0') AS overnight_events
+    )
+    SELECT settings.overnight_events,
+        EXISTS (
+            SELECT 1 FROM events e
+            WHERE e.attendance_required=1 AND e.status IN ('UPCOMING','ACTIVE')
+              AND (e.event_date + e.end_time + (
+                  CASE WHEN settings.overnight_events='1'
+                       THEN INTERVAL '1 day' ELSE INTERVAL '0 day' END
+              )) <= CURRENT_TIMESTAMP
+        ) AS has_expired
+    FROM settings")->fetch_assoc();
+    if (!$check || !in_array(strtolower((string)$check['has_expired']), ['1', 't', 'true'], true)) {
+        return;
+    }
+
+    $overnight = $check['overnight_events'] === '1' ? 1 : 0;
     $expired = "(e.event_date + e.end_time + ($overnight * INTERVAL '1 day')) <= CURRENT_TIMESTAMP";
 
     $conn->query("INSERT INTO event_attendance
