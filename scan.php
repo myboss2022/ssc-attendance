@@ -12,10 +12,10 @@ if ($event) {
 ?><!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Student Entry</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="assets/app.js?v=20261011-loading" defer></script>
+<script src="assets/app.js?v=20261011-progress" defer></script>
 <style>
 @media(max-width:640px){body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}main{padding:.75rem!important}.scan-frame{height:16rem!important}.glass{border-radius:1rem!important;padding:1rem!important}.glass .flex.items-center.justify-between{align-items:flex-start;flex-direction:column;gap:.75rem}.glass .flex.items-center.justify-between>div:last-child{width:100%;display:flex;flex-wrap:wrap;gap:.5rem}.glass .flex.items-center.justify-between a,.glass .flex.items-center.justify-between button{flex:1;text-align:center}.glass table{font-size:.75rem}.glass th,.glass td{padding:.5rem}.glass .h-8{height:auto;min-height:2rem}.scan-zoom-row{align-items:flex-start!important;flex-direction:column!important}.scan-zoom-row #status{line-height:1.35}.scan-zoom-row #scanZoomBtn{width:100%;justify-content:center}.camera-footer{left:calc(.75rem + env(safe-area-inset-left));bottom:calc(.75rem + env(safe-area-inset-bottom))}}
 .scan-frame{position:relative}.scan-sweep{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.9),transparent);box-shadow:0 0 12px rgba(16,185,129,.6)}
@@ -101,6 +101,7 @@ html,body{min-height:100%;overflow-x:hidden}
   .scan-layout-zoomed #status{display:block!important;width:100%;min-height:2rem;overflow-wrap:anywhere;line-height:1.35}
   .camera-preview{object-fit:cover!important;object-position:center center;background:#020617!important}
 </style>
+<link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
 </head>
 <body class="opacity-0 translate-y-1 text-slate-800">
 <div class="relative min-h-screen overflow-hidden"><div class="aurora a1"></div><div class="aurora a2"></div>

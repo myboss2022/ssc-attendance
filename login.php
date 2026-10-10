@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?><!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SSC Login</title>
 <style>
   :root{font-family:Arial,Helvetica,sans-serif;color:#1e293b;background:#f5f3ff}
@@ -99,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   .modal h2{margin:0;color:#1e1b4b;font-size:22px}.modal p{margin:8px 0 18px;color:#64748b;font-size:14px;line-height:1.5}.modal .button{width:100%;margin-top:4px}
   .setup,.back{display:block;text-align:center;font-size:14px;text-decoration:none}.setup{margin-top:18px;color:#6d28d9}.back{margin-top:14px;color:#64748b}.setup:hover,.back:hover{text-decoration:underline}@media(max-width:520px){.login-wrap{padding:16px}.brand-row{align-items:flex-start}.brand-mark{width:40px;height:40px;flex-basis:40px;margin-right:-4px}.brand-name{font-size:11px;letter-spacing:1px;overflow-wrap:anywhere}.brand-title{font-size:21px}.login-card{padding:16px}.button-row{justify-content:stretch}.button-row .button{width:100%}}
 </style>
-<style>html,body{min-height:100%;overflow-x:hidden}body{min-height:100dvh;align-items:flex-start}.login-wrap{margin-top:auto;margin-bottom:auto}@media(max-height:560px){body{align-items:flex-start;overflow-y:auto}.login-wrap{margin-top:1rem;margin-bottom:1rem}}</style><script src="assets/app.js?v=20261011-loading" defer></script>
+<style>html,body{min-height:100%;overflow-x:hidden}body{min-height:100dvh;align-items:flex-start}.login-wrap{margin-top:auto;margin-bottom:auto}@media(max-height:560px){body{align-items:flex-start;overflow-y:auto}.login-wrap{margin-top:1rem;margin-bottom:1rem}}</style><script src="assets/app.js?v=20261011-progress" defer></script>
+<link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
 </head>
 <body>
   <div class="login-wrap">

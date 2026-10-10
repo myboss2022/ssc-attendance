@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/database.php';
 date_default_timezone_set('Asia/Manila');
-if (session_status() === PHP_SESSION_NONE) {
+if ((!defined('APP_SKIP_SESSION_START') || APP_SKIP_SESSION_START !== true) && session_status() === PHP_SESSION_NONE) {
     if (getenv('VERCEL') === '1') {
         require_once __DIR__.'/database_session_handler.php';
         session_set_save_handler(new SupabaseSessionHandler(), true);

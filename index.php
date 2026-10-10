@@ -1,30 +1,86 @@
 <?php
+define('APP_SKIP_SESSION_START', true);
 require_once __DIR__ . '/config.php';
 $conn = db();
 
-$organizationName = get_ssc_setting('organization_name', 'SSCAttendance');
-$event = active_event($conn);
-$studentCount = (int) ($conn->query('SELECT COUNT(*) c FROM students')->fetch_assoc()['c'] ?? 0);
-$eventCount = (int) ($conn->query('SELECT COUNT(*) c FROM events')->fetch_assoc()['c'] ?? 0);
-$attendanceToday = (int) ($conn->query('SELECT COUNT(*) c FROM event_attendance WHERE recorded_date = CURDATE()')->fetch_assoc()['c'] ?? 0);
-$entriesToday = (int) ($conn->query('SELECT COUNT(*) c FROM event_attendance WHERE scan_in IS NOT NULL AND recorded_date = CURDATE()')->fetch_assoc()['c'] ?? 0);
-$exitsToday = (int) ($conn->query('SELECT COUNT(*) c FROM event_attendance WHERE scan_out IS NOT NULL AND recorded_date = CURDATE()')->fetch_assoc()['c'] ?? 0);
-$incomingEvent = $conn->query("SELECT event_name, event_date, start_time, venue FROM events WHERE event_date >= CURDATE() AND status IN ('UPCOMING','DRAFT') ORDER BY event_date ASC, start_time ASC LIMIT 1")->fetch_assoc();
-$todayEvent = $conn->query("SELECT event_name, status, venue, event_date, start_time FROM events WHERE event_date = CURDATE() AND status IN ('ACTIVE','UPCOMING','DRAFT') ORDER BY FIELD(status,'ACTIVE','UPCOMING','DRAFT'), start_time LIMIT 1")->fetch_assoc();
+$homepage = $conn->query("WITH settings AS (
+    SELECT
+        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='organization_name'), 'SSCAttendance') AS organization_name,
+        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='overnight_events'), '0') AS overnight_events,
+        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='ticker_speed'), '24') AS ticker_speed
+    FROM ssc_settings
+), active_event AS (
+    SELECT e.*
+    FROM events e
+    CROSS JOIN settings s
+    WHERE e.status='ACTIVE' AND e.attendance_required=1
+      AND (
+          e.event_date=CURRENT_DATE
+          OR (s.overnight_events='1' AND e.event_date=CURRENT_DATE - INTERVAL '1 day' AND e.end_time < e.start_time)
+      )
+    ORDER BY e.event_date DESC,e.start_time
+    LIMIT 1
+), incoming_event AS (
+    SELECT event_name,event_date,start_time,venue
+    FROM events
+    WHERE event_date>=CURRENT_DATE AND status IN ('UPCOMING','DRAFT')
+    ORDER BY event_date ASC,start_time ASC
+    LIMIT 1
+), today_event AS (
+    SELECT event_name,status,venue,event_date,start_time
+    FROM events
+    WHERE event_date=CURRENT_DATE AND status IN ('ACTIVE','UPCOMING','DRAFT')
+    ORDER BY CASE status WHEN 'ACTIVE' THEN 1 WHEN 'UPCOMING' THEN 2 ELSE 3 END,start_time
+    LIMIT 1
+), attendance_totals AS (
+    SELECT
+        COUNT(*) FILTER (WHERE recorded_date=CURRENT_DATE) AS attendance_today,
+        COUNT(*) FILTER (WHERE scan_in IS NOT NULL AND recorded_date=CURRENT_DATE) AS entries_today,
+        COUNT(*) FILTER (WHERE scan_out IS NOT NULL AND recorded_date=CURRENT_DATE) AS exits_today
+    FROM event_attendance
+)
+SELECT
+    s.organization_name,
+    s.ticker_speed,
+    (SELECT to_jsonb(e)::text FROM active_event e) AS active_event,
+    (SELECT COUNT(*) FROM students) AS student_count,
+    (SELECT COUNT(*) FROM events) AS event_count,
+    t.attendance_today,
+    t.entries_today,
+    t.exits_today,
+    (SELECT to_jsonb(e)::text FROM incoming_event e) AS incoming_event,
+    (SELECT to_jsonb(e)::text FROM today_event e) AS today_event,
+    COALESCE((
+        SELECT json_agg(to_jsonb(a) ORDER BY a.priority DESC,a.sort_order ASC,a.created_at DESC)::text
+        FROM school_announcements a
+        WHERE a.status='ACTIVE' AND (a.starts_at IS NULL OR a.starts_at<=CURRENT_TIMESTAMP)
+          AND (a.ends_at IS NULL OR a.ends_at>=CURRENT_TIMESTAMP)
+    ), '[]') AS announcements
+FROM settings s
+CROSS JOIN attendance_totals t")->fetch_assoc();
+$organizationName = $homepage['organization_name'];
+$event = json_decode((string)($homepage['active_event'] ?? 'null'), true, 512, JSON_THROW_ON_ERROR);
+$studentCount = (int)$homepage['student_count'];
+$eventCount = (int)$homepage['event_count'];
+$attendanceToday = (int)$homepage['attendance_today'];
+$entriesToday = (int)$homepage['entries_today'];
+$exitsToday = (int)$homepage['exits_today'];
+$incomingEvent = json_decode((string)($homepage['incoming_event'] ?? 'null'), true, 512, JSON_THROW_ON_ERROR);
+$todayEvent = json_decode((string)($homepage['today_event'] ?? 'null'), true, 512, JSON_THROW_ON_ERROR);
 $displayEvent = $event ?: $todayEvent;
 $attendRate = $studentCount > 0 ? min(100, (int) round(($attendanceToday / $studentCount) * 100)) : 0;
-$dbConnected = $conn && $conn->ping();
-$announcements = get_active_announcements($conn);
-$tickerSpeed = max(12, min(80, (int) get_ssc_setting('ticker_speed', '24')));
+$dbConnected = true;
+$announcements = json_decode((string)$homepage['announcements'], true, 512, JSON_THROW_ON_ERROR);
+$tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
 ?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title><?php echo h($organizationName); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/app.js?v=20261011-loading" defer></script>
+    <script src="assets/app.js?v=20261011-progress" defer></script>
     <style>
         html { scroll-behavior: smooth; }
         body { font-family: Arial, Helvetica, sans-serif; overflow-x: hidden; padding-bottom: 5rem; }
@@ -212,6 +268,7 @@ $tickerSpeed = max(12, min(80, (int) get_ssc_setting('ticker_speed', '24')));
     @keyframes stageReveal{0%,52%{filter:brightness(1)}57%{filter:brightness(2.2)}68%,100%{filter:brightness(1)}}
     @media(prefers-reduced-motion:reduce){.power-stage,.power-stage:before,.power-stage>.absolute.inset-6,.power-stage .power-smoke,.power-stage .power-flash,.power-stage .power-core{animation:none!important}.power-stage{border-color:rgba(255,255,255,.1)!important;background:linear-gradient(135deg,rgba(59,130,246,.1),#0f172a,rgba(20,184,166,.1))!important}.power-stage>.absolute.inset-6,.power-stage .power-core{opacity:1;transform:none}}
 </style>
+    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
 </head>
 <body class="bg-[#edf5ff] text-slate-800 antialiased">
     <div class="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.12),_transparent_30%),linear-gradient(180deg,#f4f8ff_0%,#eef5ff_45%,#f8fbff_100%)]">
