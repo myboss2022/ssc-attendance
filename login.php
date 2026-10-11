@@ -79,6 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SSC Login</title>
+<link rel="icon" type="image/png" href="/logo/SSC.png">
+<link rel="apple-touch-icon" href="/logo/SSC.png">
 <style>
   :root{font-family:Arial,Helvetica,sans-serif;color:#1e293b;background:#f5f3ff}
   *{box-sizing:border-box}

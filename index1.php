@@ -58,6 +58,8 @@ $tickerSpeed = max(10, min(90, (int)$homepage['ticker_speed']));
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title><?php echo h($organizationName); ?></title>
+<link rel="icon" type="image/png" href="/logo/SSC.png">
+<link rel="apple-touch-icon" href="/logo/SSC.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="assets/app.js?v=20261011-progress" defer></script>
 <style>
