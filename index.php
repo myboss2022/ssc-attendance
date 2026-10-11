@@ -606,6 +606,83 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
                 </div>
             </section>
 
+            <section id="about" class="scroll-mt-48 bg-gradient-to-b from-slate-50 to-white py-20 md:scroll-mt-24">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="mx-auto max-w-3xl text-center">
+                        <div class="text-xs font-bold uppercase tracking-[0.22em] text-blue-700">About the system</div>
+                        <h2 class="mt-3 text-3xl font-black tracking-[-0.06em] text-slate-900 sm:text-4xl">Mas organisadong attendance para sa bawat school event</h2>
+                        <p class="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
+                            Ang SSCAttendance ay isang web-based system para maitala at masubaybayan ng paaralan ang pagpasok at pag-alis ng mga estudyante sa mga event at aktibidad. Pinagsasama nito ang event information, student records, attendance scanning, at mga ulat sa iisang workflow.
+                        </p>
+                    </div>
+
+                    <div class="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                        <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 2v4m8-4v4M3 10h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <h3 class="mt-5 text-lg font-bold text-slate-900">Event-based tracking</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-600">Pumili at mamahala ng school events para maiuugnay ang attendance sa tamang aktibidad, petsa, at talaan.</p>
+                        </article>
+
+                        <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V4h3m10 0h3v3M4 17v3h3m10 0h3v-3M7 12h10m-5-5v10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <h3 class="mt-5 text-lg font-bold text-slate-900">Student entry at exit</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-600">Gamitin ang attendance scanner o hanapin/ilagay ang student record para maitala ang pagpasok at pag-alis.</p>
+                        </article>
+
+                        <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19V5m0 14h16M8 15l3-4 3 2 5-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <h3 class="mt-5 text-lg font-bold text-slate-900">Dashboard at attendance logs</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-600">Tingnan ang bilang ng estudyante at event, attendance summary, pati ang mga naitalang entry at exit.</p>
+                        </article>
+
+                        <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-700" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4zM8 9h8m-8 4h5m-9 6 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <h3 class="mt-5 text-lg font-bold text-slate-900">Records at announcements</h3>
+                            <p class="mt-2 text-sm leading-6 text-slate-600">Panatilihing organisado ang student records, event schedule, at mahahalagang school announcements.</p>
+                        </article>
+                    </div>
+
+                    <div class="mt-12 grid gap-8 rounded-3xl border border-blue-100 bg-white p-6 shadow-sm md:grid-cols-[.8fr_1.2fr] md:p-8">
+                        <div>
+                            <div class="text-xs font-bold uppercase tracking-[0.2em] text-teal-700">Paano ito gumagana</div>
+                            <h3 class="mt-3 text-2xl font-black tracking-tight text-slate-900">Mula event hanggang attendance report</h3>
+                            <p class="mt-3 text-sm leading-6 text-slate-600">Dinisenyo ang proseso para madaling sundan ng event staff at administrators.</p>
+                        </div>
+                        <ol class="grid gap-4 sm:grid-cols-2">
+                            <li class="flex gap-3">
+                                <span class="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700">1</span>
+                                <span class="pt-1 text-sm leading-6 text-slate-700"><strong>Piliin ang event</strong><br>Itakda kung saang aktibidad itatala ang attendance.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">2</span>
+                                <span class="pt-1 text-sm leading-6 text-slate-700"><strong>I-scan o hanapin ang estudyante</strong><br>I-verify ang student record sa attendance screen.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-violet-100 text-sm font-bold text-violet-700">3</span>
+                                <span class="pt-1 text-sm leading-6 text-slate-700"><strong>Itala ang entry o exit</strong><br>Itala ang pagdating at pag-alis sa tamang event.</span>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-amber-100 text-sm font-bold text-amber-700">4</span>
+                                <span class="pt-1 text-sm leading-6 text-slate-700"><strong>Suriin ang talaan</strong><br>Gamitin ang dashboard at logs para makita ang attendance summary.</span>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="mt-8 flex flex-wrap justify-center gap-3">
+                        <a href="index1.php" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700">Buksan ang Attendance <span aria-hidden="true">→</span></a>
+                        <a href="admin/events.php" class="inline-flex min-h-11 items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-blue-200 hover:text-blue-700">Tingnan ang Events</a>
+                    </div>
+                </div>
+            </section>
+
             <section class="bg-slate-950 py-20 text-white">
                 <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
                     <div class="flex items-center justify-center lg:translate-y-10">
@@ -619,7 +696,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
                         </div>
                     </div>
 
-                    <div id="about" class="contents">
+                    <div class="contents">
                         <div class="lg:col-start-2">
                         <div class="text-xs font-bold uppercase tracking-[0.22em] text-sky-300">Security</div>
                         <h2 class="mt-3 text-3xl font-black tracking-[-0.06em] text-white sm:text-4xl">Built around secure attendance</h2>
