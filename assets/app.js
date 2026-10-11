@@ -21,23 +21,25 @@
     progress.setAttribute('aria-hidden', 'true');
     body.appendChild(progress);
 
-    var attendanceDockContent = document.getElementById('mobileAttendanceDockContent');
-    var hideAttendanceDock = document.getElementById('hideMobileAttendanceDock');
-    var showAttendanceDock = document.getElementById('showMobileAttendanceDock');
+    var attendanceLink = document.getElementById('mobileAttendanceLink');
+    var hideAttendanceLink = document.getElementById('hideMobileAttendanceLink');
+    var showAttendanceLink = document.getElementById('showMobileAttendanceLink');
 
-    if (attendanceDockContent && hideAttendanceDock && showAttendanceDock) {
-      hideAttendanceDock.addEventListener('click', function () {
-        attendanceDockContent.hidden = true;
-        hideAttendanceDock.setAttribute('aria-expanded', 'false');
-        showAttendanceDock.hidden = false;
-        showAttendanceDock.setAttribute('aria-expanded', 'false');
+    if (attendanceLink && hideAttendanceLink && showAttendanceLink) {
+      hideAttendanceLink.addEventListener('click', function () {
+        attendanceLink.hidden = true;
+        hideAttendanceLink.hidden = true;
+        showAttendanceLink.hidden = false;
+        hideAttendanceLink.setAttribute('aria-expanded', 'false');
+        showAttendanceLink.setAttribute('aria-expanded', 'false');
       });
 
-      showAttendanceDock.addEventListener('click', function () {
-        attendanceDockContent.hidden = false;
-        hideAttendanceDock.setAttribute('aria-expanded', 'true');
-        showAttendanceDock.hidden = true;
-        showAttendanceDock.setAttribute('aria-expanded', 'true');
+      showAttendanceLink.addEventListener('click', function () {
+        attendanceLink.hidden = false;
+        hideAttendanceLink.hidden = false;
+        showAttendanceLink.hidden = true;
+        hideAttendanceLink.setAttribute('aria-expanded', 'true');
+        showAttendanceLink.setAttribute('aria-expanded', 'true');
       });
     }
 

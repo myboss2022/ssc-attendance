@@ -80,7 +80,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title><?php echo h($organizationName); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/app.js?v=20261011-dock" defer></script>
+    <script src="assets/app.js?v=20261011-navtoggle" defer></script>
     <style>
         html { scroll-behavior: smooth; }
         body { font-family: Arial, Helvetica, sans-serif; overflow-x: hidden; padding-bottom: 5rem; }
@@ -268,7 +268,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     @keyframes stageReveal{0%,52%{filter:brightness(1)}57%{filter:brightness(2.2)}68%,100%{filter:brightness(1)}}
     @media(prefers-reduced-motion:reduce){.power-stage,.power-stage:before,.power-stage>.absolute.inset-6,.power-stage .power-smoke,.power-stage .power-flash,.power-stage .power-core{animation:none!important}.power-stage{border-color:rgba(255,255,255,.1)!important;background:linear-gradient(135deg,rgba(59,130,246,.1),#0f172a,rgba(20,184,166,.1))!important}.power-stage>.absolute.inset-6,.power-stage .power-core{opacity:1;transform:none}}
 </style>
-    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile4">
+    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile5">
 </head>
 <body class="bg-[#edf5ff] text-slate-800 antialiased">
     <div class="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.12),_transparent_30%),linear-gradient(180deg,#f4f8ff_0%,#eef5ff_45%,#f8fbff_100%)]">
@@ -304,25 +304,16 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
                     <a href="admin/events.php" class="mobile-primary-nav-link">Events</a>
                     <a href="#features" class="mobile-primary-nav-link">Features</a>
                     <a href="#about" class="mobile-primary-nav-link">About</a>
+                    <a id="mobileAttendanceLink" href="index1.php" class="mobile-primary-nav-cta">Open Attendance</a>
+                    <button id="hideMobileAttendanceLink" class="mobile-primary-nav-toggle" type="button" aria-controls="mobileAttendanceLink" aria-expanded="true" aria-label="Hide Open Attendance link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <button id="showMobileAttendanceLink" class="mobile-primary-nav-show" type="button" aria-controls="mobileAttendanceLink" aria-expanded="false" hidden>
+                        Show Attendance
+                    </button>
                 </div>
             </div>
         </header>
-
-        <div id="mobileAttendanceDock" class="mobile-attendance-dock" aria-label="Attendance shortcut">
-            <div id="mobileAttendanceDockContent" class="mobile-attendance-dock-content">
-                <a href="index1.php" class="mobile-attendance-dock-link">
-                    <span>Open Attendance System</span>
-                    <span aria-hidden="true">→</span>
-                </a>
-                <button id="hideMobileAttendanceDock" class="mobile-attendance-dock-toggle" type="button" aria-controls="mobileAttendanceDockContent" aria-expanded="true" aria-label="Hide attendance shortcut">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-            </div>
-            <button id="showMobileAttendanceDock" class="mobile-attendance-dock-show" type="button" aria-controls="mobileAttendanceDockContent" aria-expanded="false" hidden>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 15 6-6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Show Attendance
-            </button>
-        </div>
 
         <main class="relative z-10 pt-24">
             <section class="relative overflow-hidden">
