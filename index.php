@@ -268,7 +268,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     @keyframes stageReveal{0%,52%{filter:brightness(1)}57%{filter:brightness(2.2)}68%,100%{filter:brightness(1)}}
     @media(prefers-reduced-motion:reduce){.power-stage,.power-stage:before,.power-stage>.absolute.inset-6,.power-stage .power-smoke,.power-stage .power-flash,.power-stage .power-core{animation:none!important}.power-stage{border-color:rgba(255,255,255,.1)!important;background:linear-gradient(135deg,rgba(59,130,246,.1),#0f172a,rgba(20,184,166,.1))!important}.power-stage>.absolute.inset-6,.power-stage .power-core{opacity:1;transform:none}}
 </style>
-    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile5">
+    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile6">
 </head>
 <body class="bg-[#edf5ff] text-slate-800 antialiased">
     <div class="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.12),_transparent_30%),linear-gradient(180deg,#f4f8ff_0%,#eef5ff_45%,#f8fbff_100%)]">
@@ -297,20 +297,19 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
 
             </nav>
 
-            <div id="mobileMenu" class="mobile-primary-nav border-t border-slate-200 bg-white md:hidden">
-                <div class="mobile-primary-nav-track mx-auto flex max-w-7xl items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 sm:px-6">
-                    <a href="index.php" class="mobile-primary-nav-link">Home</a>
+            <div class="mobile-primary-nav border-t border-slate-200/80 md:hidden">
+                <nav class="mobile-primary-nav-track mx-auto max-w-7xl" aria-label="Primary navigation">
+                    <a href="index.php" class="mobile-primary-nav-link" aria-current="page">Home</a>
                     <a href="index1.php" class="mobile-primary-nav-link">Attendance</a>
                     <a href="admin/events.php" class="mobile-primary-nav-link">Events</a>
                     <a href="#features" class="mobile-primary-nav-link">Features</a>
                     <a href="#about" class="mobile-primary-nav-link">About</a>
-                    <a id="mobileAttendanceLink" href="index1.php" class="mobile-primary-nav-cta">Open Attendance</a>
-                    <button id="hideMobileAttendanceLink" class="mobile-primary-nav-toggle" type="button" aria-controls="mobileAttendanceLink" aria-expanded="true" aria-label="Hide Open Attendance link">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
-                    <button id="showMobileAttendanceLink" class="mobile-primary-nav-show" type="button" aria-controls="mobileAttendanceLink" aria-expanded="false" hidden>
-                        Show Attendance
-                    </button>
+                </nav>
+                <div class="mobile-primary-nav-action mx-auto max-w-7xl">
+                    <a href="index1.php" class="mobile-primary-nav-cta">
+                        <span>Show Attendance</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
                 </div>
             </div>
         </header>
