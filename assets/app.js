@@ -21,6 +21,26 @@
     progress.setAttribute('aria-hidden', 'true');
     body.appendChild(progress);
 
+    var attendanceDockContent = document.getElementById('mobileAttendanceDockContent');
+    var hideAttendanceDock = document.getElementById('hideMobileAttendanceDock');
+    var showAttendanceDock = document.getElementById('showMobileAttendanceDock');
+
+    if (attendanceDockContent && hideAttendanceDock && showAttendanceDock) {
+      hideAttendanceDock.addEventListener('click', function () {
+        attendanceDockContent.hidden = true;
+        hideAttendanceDock.setAttribute('aria-expanded', 'false');
+        showAttendanceDock.hidden = false;
+        showAttendanceDock.setAttribute('aria-expanded', 'false');
+      });
+
+      showAttendanceDock.addEventListener('click', function () {
+        attendanceDockContent.hidden = false;
+        hideAttendanceDock.setAttribute('aria-expanded', 'true');
+        showAttendanceDock.hidden = true;
+        showAttendanceDock.setAttribute('aria-expanded', 'true');
+      });
+    }
+
     function hideProgress() {
       progress.classList.remove('is-visible');
       progress.setAttribute('aria-hidden', 'true');

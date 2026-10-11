@@ -10,6 +10,10 @@ body {
   overflow-x: clip;
 }
 
+.mobile-attendance-dock {
+  display: none;
+}
+
 @supports not (overflow: clip) {
   body {
     overflow-x: hidden;
@@ -327,9 +331,96 @@ body {
     font-size: .78rem;
   }
 
+  .mobile-attendance-dock {
+    position: fixed;
+    right: max(.75rem, env(safe-area-inset-right));
+    bottom: max(.75rem, env(safe-area-inset-bottom));
+    left: max(.75rem, env(safe-area-inset-left));
+    z-index: 45;
+    display: block;
+    max-width: 34rem;
+    margin: 0 auto;
+    padding: .5rem;
+    border: 1px solid rgba(148, 163, 184, .35);
+    border-radius: 1.15rem;
+    background: rgba(255, 255, 255, .94);
+    box-shadow: 0 12px 36px rgba(15, 23, 42, .2);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .mobile-attendance-dock-content {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .mobile-attendance-dock-content[hidden],
+  .mobile-attendance-dock-show[hidden] {
+    display: none !important;
+  }
+
+  .mobile-attendance-dock-link {
+    display: flex;
+    min-width: 0;
+    min-height: 3rem;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    border-radius: .8rem;
+    background: linear-gradient(110deg, #1d4ed8, #0891b2);
+    padding: .7rem 1rem;
+    color: #fff;
+    font-size: .95rem;
+    font-weight: 750;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .mobile-attendance-dock-toggle,
+  .mobile-attendance-dock-show {
+    display: inline-flex;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    border: 1px solid #cbd5e1;
+    border-radius: .8rem;
+    background: #fff;
+    color: #334155;
+    cursor: pointer;
+  }
+
+  .mobile-attendance-dock-toggle svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .mobile-attendance-dock-show {
+    min-height: 2.75rem;
+    margin-left: auto;
+    border-radius: 999px;
+    padding: .5rem .9rem;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, .12);
+    font-size: .82rem;
+    font-weight: 700;
+  }
+
+  .mobile-attendance-dock-show svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
   main.relative.z-10.pt-24 {
     padding-top: calc(8rem + env(safe-area-inset-top));
     scroll-margin-top: calc(8rem + env(safe-area-inset-top));
+  }
+
+  main.relative.z-10.pt-24 > section:first-child {
+    padding-bottom: 6.5rem;
   }
 }
 
