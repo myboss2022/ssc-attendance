@@ -17,6 +17,10 @@ body {
 }
 
 @media (max-width: 767px) {
+  html {
+    scroll-padding-top: calc(8rem + env(safe-area-inset-top));
+  }
+
   .admin-content {
     width: 100%;
     min-width: 0;
@@ -233,6 +237,99 @@ body {
 
   .news-ticker-message {
     font-size: .65rem;
+  }
+}
+
+@media (max-width: 767px) {
+  header.fixed.inset-x-0.top-0.z-40 {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  header.fixed.inset-x-0.top-0.z-40 > nav {
+    min-height: 4.25rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+  }
+
+  header.fixed.inset-x-0.top-0.z-40 > nav > a {
+    min-width: 0;
+    gap: .6rem;
+  }
+
+  header.fixed.inset-x-0.top-0.z-40 > nav > a img {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+  }
+
+  header.fixed.inset-x-0.top-0.z-40 > nav > a > div {
+    min-width: 0;
+  }
+
+  header.fixed.inset-x-0.top-0.z-40 > nav > a > div > div:first-child {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  header.fixed.inset-x-0.top-0.z-40 > nav > a > div > div:last-child {
+    font-size: .52rem;
+    letter-spacing: .14em;
+  }
+
+  .mobile-primary-nav {
+    display: block !important;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .mobile-primary-nav-track {
+    display: flex !important;
+    width: 100%;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: .35rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-left: max(.75rem, env(safe-area-inset-left));
+    padding-right: max(.75rem, env(safe-area-inset-right));
+  }
+
+  .mobile-primary-nav-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-primary-nav-link,
+  .mobile-primary-nav-cta {
+    display: inline-flex;
+    min-height: 2.5rem;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: .5rem .8rem;
+    white-space: nowrap;
+  }
+
+  .mobile-primary-nav-link {
+    border: 1px solid transparent;
+  }
+
+  .mobile-primary-nav-link:hover {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  .mobile-primary-nav-cta {
+    background: #0f172a;
+    color: #fff;
+    font-size: .78rem;
+  }
+
+  main.relative.z-10.pt-24 {
+    padding-top: calc(8rem + env(safe-area-inset-top));
+    scroll-margin-top: calc(8rem + env(safe-area-inset-top));
   }
 }
 

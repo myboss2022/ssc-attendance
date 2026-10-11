@@ -268,7 +268,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     @keyframes stageReveal{0%,52%{filter:brightness(1)}57%{filter:brightness(2.2)}68%,100%{filter:brightness(1)}}
     @media(prefers-reduced-motion:reduce){.power-stage,.power-stage:before,.power-stage>.absolute.inset-6,.power-stage .power-smoke,.power-stage .power-flash,.power-stage .power-core{animation:none!important}.power-stage{border-color:rgba(255,255,255,.1)!important;background:linear-gradient(135deg,rgba(59,130,246,.1),#0f172a,rgba(20,184,166,.1))!important}.power-stage>.absolute.inset-6,.power-stage .power-core{opacity:1;transform:none}}
 </style>
-    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
+    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile3">
 </head>
 <body class="bg-[#edf5ff] text-slate-800 antialiased">
     <div class="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.12),_transparent_30%),linear-gradient(180deg,#f4f8ff_0%,#eef5ff_45%,#f8fbff_100%)]">
@@ -295,19 +295,16 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
                     <a href="#about" class="rounded-full px-3 py-2 transition hover:bg-blue-50 hover:text-blue-700">About</a>
                 </div>
 
-                <button id="menuButton" type="button" onclick="var menu=document.getElementById('mobileMenu'); var isHidden=menu.classList.toggle('hidden'); this.setAttribute('aria-expanded',String(!isHidden));" class="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm md:hidden" aria-label="Toggle menu" aria-controls="mobileMenu" aria-expanded="false">
-                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
-                </button>
             </nav>
 
-            <div id="mobileMenu" class="hidden border-t border-slate-200 bg-white md:hidden">
-                <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-sm font-medium text-slate-700">
-                    <a href="index.php" class="rounded-xl px-2 py-2 hover:bg-blue-50 hover:text-blue-700">Home</a>
-                    <a href="index1.php" class="rounded-xl px-2 py-2 hover:bg-blue-50 hover:text-blue-700">Attendance</a>
-                    <a href="admin/events.php" class="rounded-xl px-2 py-2 hover:bg-blue-50 hover:text-blue-700">Events</a>
-                    <a href="#features" class="rounded-xl px-2 py-2 hover:bg-blue-50 hover:text-blue-700">Features</a>
-                    <a href="#about" class="rounded-xl px-2 py-2 hover:bg-blue-50 hover:text-blue-700">About</a>
-                    <a href="index1.php" class="mt-2 inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 font-semibold text-white">Open Attendance System</a>
+            <div id="mobileMenu" class="mobile-primary-nav border-t border-slate-200 bg-white md:hidden">
+                <div class="mobile-primary-nav-track mx-auto flex max-w-7xl items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-700 sm:px-6">
+                    <a href="index.php" class="mobile-primary-nav-link">Home</a>
+                    <a href="index1.php" class="mobile-primary-nav-link">Attendance</a>
+                    <a href="admin/events.php" class="mobile-primary-nav-link">Events</a>
+                    <a href="#features" class="mobile-primary-nav-link">Features</a>
+                    <a href="#about" class="mobile-primary-nav-link">About</a>
+                    <a href="index1.php" class="mobile-primary-nav-cta">Open Attendance</a>
                 </div>
             </div>
         </header>
