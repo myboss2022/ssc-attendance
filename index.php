@@ -268,7 +268,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     @keyframes stageReveal{0%,52%{filter:brightness(1)}57%{filter:brightness(2.2)}68%,100%{filter:brightness(1)}}
     @media(prefers-reduced-motion:reduce){.power-stage,.power-stage:before,.power-stage>.absolute.inset-6,.power-stage .power-smoke,.power-stage .power-flash,.power-stage .power-core{animation:none!important}.power-stage{border-color:rgba(255,255,255,.1)!important;background:linear-gradient(135deg,rgba(59,130,246,.1),#0f172a,rgba(20,184,166,.1))!important}.power-stage>.absolute.inset-6,.power-stage .power-core{opacity:1;transform:none}}
 </style>
-    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile6">
+    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile7">
 </head>
 <body class="bg-[#edf5ff] text-slate-800 antialiased">
     <div class="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.12),_transparent_30%),linear-gradient(180deg,#f4f8ff_0%,#eef5ff_45%,#f8fbff_100%)]">
@@ -287,6 +287,10 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
                     </div>
                 </a>
 
+                <button id="mobileNavToggle" type="button" class="mobile-nav-toggle md:hidden" aria-controls="mobilePrimaryNav" aria-expanded="true" aria-label="Hide navigation" title="Hide navigation">
+                    <span>Menu</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
                 <div class="hidden items-center gap-7 text-sm font-semibold text-slate-700 md:flex">
                     <a href="index.php" class="rounded-full px-3 py-2 transition hover:bg-blue-50 hover:text-blue-700">Home</a>
                     <a href="index1.php" class="rounded-full px-3 py-2 transition hover:bg-blue-50 hover:text-blue-700">Attendance</a>
@@ -297,7 +301,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
 
             </nav>
 
-            <div class="mobile-primary-nav border-t border-slate-200/80 md:hidden">
+            <div id="mobilePrimaryNav" class="mobile-primary-nav border-t border-slate-200/80 md:hidden">
                 <nav class="mobile-primary-nav-track mx-auto max-w-7xl" aria-label="Primary navigation">
                     <a href="index.php" class="mobile-primary-nav-link" aria-current="page">Home</a>
                     <a href="index1.php" class="mobile-primary-nav-link">Attendance</a>
@@ -828,14 +832,16 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     <?php endif; ?>
 
     <script>
-        const menuButton = document.getElementById('menuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (menuButton && mobileMenu) {
-            mobileMenu.querySelectorAll('a').forEach(function (link) {
-                link.addEventListener('click', function () {
-                    mobileMenu.classList.add('hidden');
-                    menuButton.setAttribute('aria-expanded', 'false');
-                });
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const mobilePrimaryNav = document.getElementById('mobilePrimaryNav');
+        if (mobileNavToggle && mobilePrimaryNav) {
+            mobileNavToggle.addEventListener('click', function () {
+                const isExpanded = mobileNavToggle.getAttribute('aria-expanded') === 'true';
+                mobileNavToggle.setAttribute('aria-expanded', String(!isExpanded));
+                mobileNavToggle.setAttribute('aria-label', isExpanded ? 'Show navigation' : 'Hide navigation');
+                mobileNavToggle.setAttribute('title', isExpanded ? 'Show navigation' : 'Hide navigation');
+                mobilePrimaryNav.hidden = isExpanded;
+                document.body.classList.toggle('mobile-primary-nav-collapsed', isExpanded);
             });
         }
     </script>
