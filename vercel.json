@@ -1,5 +1,4 @@
 {
-  "buildCommand": "npm run build:css",
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0",
