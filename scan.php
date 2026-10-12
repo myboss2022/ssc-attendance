@@ -50,48 +50,17 @@ if ($event) {
     left: auto !important;
   }
 }
-.camera-mobile-fullscreen {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 90 !important;
-  box-sizing: border-box;
-  width: 100vw !important;
-  height: 100vh !important;
-  height: 100svh !important;
-  height: 100dvh !important;
-  min-height: 0 !important;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
-  background: #020617 !important;
-}
-.camera-mobile-fullscreen > div {
-  display: flex;
-  flex-direction: column;
-  width: 100% !important;
-  height: 100% !important;
-  max-height: 100% !important;
-  min-height: 0 !important;
-  border-radius: 0 !important;
-}
-.camera-mobile-fullscreen > div > div.bg-slate-950 {
-  display: flex;
-  flex: 1 1 auto;
-  width: 100%;
-  height: auto !important;
-  min-height: 0;
-  padding: 0 !important;
-  background: #020617 !important;
-}
 @media(max-height:500px) and (pointer:coarse) {
   main { padding: .5rem !important; }
   .scan-frame { height: min(16rem, 38dvh) !important; min-height: 10rem; }
 }
-.camera-mobile-fullscreen .camera-frame {
+.camera-modal .camera-frame {
   flex: 1 1 auto;
   width: 100%;
   min-height: 0;
   border-radius: 0 !important;
 }
-.camera-mobile-fullscreen .camera-preview {
+.camera-modal .camera-preview {
   width: 100%;
   height: 100%;
   object-fit: cover !important;
@@ -159,7 +128,6 @@ if ($event) {
 <style>
 html,body{min-height:100%;overflow-x:hidden}
 .scan-layout-zoomed{height:calc(100dvh - var(--scan-toolbar-height,4.75rem))!important;min-height:calc(100svh - var(--scan-toolbar-height,4.75rem))!important;padding-bottom:calc(1.25rem + env(safe-area-inset-bottom))!important}
-.camera-modal{height:100dvh!important;min-height:100svh!important;padding-bottom:env(safe-area-inset-bottom)!important}
 .camera-footer{bottom:calc(1rem + env(safe-area-inset-bottom))}
 @media(max-width:640px){.scan-layout-zoomed{padding-right:.75rem!important;padding-left:.75rem!important}.scan-layout-zoomed #recentPanel th:nth-child(2),.scan-layout-zoomed #recentPanel td:nth-child(2){min-width:18rem}.scan-layout-zoomed #recentPanel th:nth-child(1),.scan-layout-zoomed #recentPanel td:nth-child(1){min-width:9rem}}
 </style>
@@ -200,5 +168,5 @@ var clock=document.getElementById('clock');function tick(){clock.textContent=new
 var kiosk=document.getElementById('kioskBtn');kiosk.addEventListener('click',function(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()});document.addEventListener('fullscreenchange',function(){kiosk.textContent=document.fullscreenElement?'Exit Kiosk':'Enter Kiosk'});/*
 var cameraModal=document.getElementById('cameraModal'),cameraVideo=document.getElementById('cameraVideo'),cameraStatus=document.getElementById('cameraStatus'),switchCamera=document.getElementById('switchCamera'),cameraStream=null,cameraFrame=null,cameraDetector=null,cameraBusy=false,cameraSessionLocked=false,usingFrontCamera=false;function stopCamera(){if(cameraFrame){cancelAnimationFrame(cameraFrame);cameraFrame=null}if(cameraStream){cameraStream.getTracks().forEach(function(track){track.stop()});cameraStream=null}cameraVideo.srcObject=null}function closeCamera(){stopCamera();cameraModal.classList.add('hidden');cameraModal.classList.remove('flex');if(document.getElementById('qrHidden'))document.getElementById('qrHidden').focus()}async function submitCameraCode(code){if(!code||cameraSessionLocked)return;cameraSessionLocked=true;cameraBusy=true;window.SSC_SCAN_CONFIG.scanType='camera';document.getElementById('qrHidden').value=code;document.getElementById('qrHidden').dispatchEvent(new Event('input',{bubbles:true}));closeCamera()}async function scanCameraFrame(){if(!cameraStream||cameraBusy||cameraSessionLocked||!cameraDetector)return;try{var results=await cameraDetector.detect(cameraVideo);if(results.length){var code=String(results[0].rawValue||'').trim();if(code){submitCameraCode(code);return}}}catch(error){}cameraFrame=requestAnimationFrame(scanCameraFrame)}async function openCamera(){cameraSessionLocked=false;cameraBusy=false;cameraModal.classList.remove('hidden');cameraModal.classList.add('flex');cameraStatus.textContent='Waiting for camera...';if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){cameraStatus.textContent='Camera access is not supported on this browser.';return}try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:usingFrontCamera?'user':'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});cameraVideo.srcObject=cameraStream;await cameraVideo.play();cameraDetector=null;if('BarcodeDetector' in window){try{var formats=['qr_code','code_128','code_39','ean_13','ean_8','upc_a','upc_e','codabar','itf'];if(BarcodeDetector.getSupportedFormats){var supported=await BarcodeDetector.getSupportedFormats();formats=formats.filter(function(format){return supported.indexOf(format)!==-1})}cameraDetector=formats.length?new BarcodeDetector({formats:formats}):null}catch(detectorError){cameraDetector=null}}cameraStatus.textContent=cameraDetector?'Scanning QR/barcode...':'Camera is open. Starting local decoder...';if(cameraDetector)cameraFrame=requestAnimationFrame(scanCameraFrame)}catch(error){cameraStatus.textContent=error.name==='NotAllowedError'?'Camera permission denied. Allow camera access and try again.':'Unable to start the camera. Check camera permission and use HTTPS or localhost.'}}async function toggleCamera(){usingFrontCamera=!usingFrontCamera;stopCamera();switchCamera.textContent=usingFrontCamera?'Back camera':'Front camera';await openCamera()}document.getElementById('cameraBtn').addEventListener('click',openCamera);document.getElementById('closeCamera').addEventListener('click',closeCamera);document.getElementById('cameraCancel').addEventListener('click',closeCamera);switchCamera.addEventListener('click',toggleCamera);cameraModal.addEventListener('click',function(event){if(event.target===cameraModal)closeCamera()});if(new URLSearchParams(window.location.search).get('camera')==='1')window.addEventListener('load',openCamera);
 */</script>
-<script src="assets/camera-guard.js?v=16"></script><script src="assets/camera-scanner.js?v=17"></script><script src="assets/scan.js?v=18" defer></script><script>document.querySelectorAll('th').forEach(function(header){if(header.textContent.includes('Course / Grade / Section'))header.textContent=header.textContent.replace('Course / Grade / Section','Course / Year Level / Block')});</script>
+<script src="assets/camera-guard.js?v=16"></script><script src="assets/camera-scanner.js?v=18"></script><script src="assets/scan.js?v=18" defer></script><script>document.querySelectorAll('th').forEach(function(header){if(header.textContent.includes('Course / Grade / Section'))header.textContent=header.textContent.replace('Course / Grade / Section','Course / Year Level / Block')});</script>
 </body></html>
