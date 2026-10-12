@@ -270,7 +270,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     @keyframes stageReveal{0%,52%{filter:brightness(1)}57%{filter:brightness(2.2)}68%,100%{filter:brightness(1)}}
     @media(prefers-reduced-motion:reduce){.power-stage,.power-stage:before,.power-stage>.absolute.inset-6,.power-stage .power-smoke,.power-stage .power-flash,.power-stage .power-core{animation:none!important}.power-stage{border-color:rgba(255,255,255,.1)!important;background:linear-gradient(135deg,rgba(59,130,246,.1),#0f172a,rgba(20,184,166,.1))!important}.power-stage>.absolute.inset-6,.power-stage .power-core{opacity:1;transform:none}}
 </style>
-    <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile8">
+    <link rel="stylesheet" href="assets/responsive.css?v=20261012-school-news">
 </head>
 <body class="bg-[#edf5ff] text-slate-800 antialiased">
     <div class="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.12),_transparent_32%),radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.12),_transparent_30%),linear-gradient(180deg,#f4f8ff_0%,#eef5ff_45%,#f8fbff_100%)]">
@@ -886,7 +886,7 @@ $tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
     </div>
 
     <?php if (!empty($announcements)): ?>
-    <div class="fixed inset-x-0 bottom-0 z-40 px-0 pb-0">
+    <div class="fixed inset-x-0 bottom-0 z-40 school-news-dock px-0 pb-0">
         <div class="news-broadcast">
             <div class="news-brand">
                 <div class="news-brand-inner">

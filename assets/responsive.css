@@ -658,3 +658,17 @@ body {
     transition: none !important;
   }
 }
+
+@media (max-width: 640px) {
+  .fixed.inset-x-0.bottom-0.z-40.school-news-dock {
+    position: fixed !important;
+    inset: auto 0 0 !important;
+    z-index: 50 !important;
+    padding-bottom: env(safe-area-inset-bottom) !important;
+    pointer-events: none;
+  }
+
+  .school-news-dock .news-broadcast {
+    pointer-events: auto;
+  }
+}

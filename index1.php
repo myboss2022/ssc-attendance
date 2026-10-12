@@ -95,7 +95,7 @@ html,body{min-height:100%;overflow-x:hidden}body{min-height:100dvh}
   #cameraLaunch svg{display:none}
   #cameraLaunch{filter:none!important;mix-blend-mode:normal!important}
 </style>
-<link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
+<link rel="stylesheet" href="assets/responsive.css?v=20261012-school-news">
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 opacity-0 translate-y-1">
 <div class="fixed right-5 top-5 z-50">
@@ -109,7 +109,7 @@ html,body{min-height:100%;overflow-x:hidden}body{min-height:100dvh}
 <a href="admin/index.php" class="lift group flex min-h-36 flex-col justify-between rounded-2xl border border-violet-200 bg-white/70 p-4 text-left shadow-sm transition hover:bg-white hover:shadow-xl sm:p-5"><div><div class="flex flex-nowrap items-center justify-center gap-2 text-violet-700 sm:justify-start"><svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 12a5 5 0 1 0-5-5a5 5 0 0 0 5 5m-7 8a7 7 0 0 1 14 0z"/></svg><div class="shrink-0 whitespace-nowrap text-xl font-semibold">Admin Dashboard</div></div><div class="whitespace-nowrap text-center text-slate-500">Manage students and logs</div></div><div class="mt-2 self-end whitespace-nowrap text-sm text-slate-500 transition group-hover:translate-x-0.5">Open dashboard →</div></a>
 </div><div class="mx-auto mt-6 grid max-w-4xl gap-3 text-left sm:grid-cols-2 lg:grid-cols-4"><div class="rounded-xl border border-white/70 bg-white/60 p-4"><div class="text-xs uppercase tracking-widest text-slate-500">Event status</div><div class="mt-1 font-semibold <?php echo $event?'text-emerald-700':'text-slate-600'; ?>"><?php echo $event?'ACTIVE':'NO ACTIVE EVENT'; ?></div></div><div class="rounded-xl border border-white/70 bg-white/60 p-4"><div class="text-xs uppercase tracking-widest text-slate-500">Registered students</div><div class="mt-1 text-2xl font-bold"><?php echo number_format($registered); ?></div></div><div class="rounded-xl border border-white/70 bg-white/60 p-4"><div class="text-xs uppercase tracking-widest text-slate-500">Event today</div><?php if ($todayEvent): ?><div class="mt-1 font-semibold text-indigo-700"><?php echo h($todayEvent['event_name']); ?></div><?php else: ?><div class="mt-1 font-semibold text-slate-500">No event today</div><?php endif; ?></div><div class="rounded-xl border border-white/70 bg-white/60 p-4"><div class="text-xs uppercase tracking-widest text-slate-500">Incoming events</div><?php if ($incomingEvent): ?><div class="mt-1 font-semibold text-violet-700"><?php echo h($incomingEvent['event_name']); ?></div><div class="mt-1 text-xs text-slate-500"><?php echo h($incomingEvent['event_date']); ?></div><?php else: ?><div class="mt-1 font-semibold text-slate-500">No incoming event</div><?php endif; ?></div></div></section></main></div></div>
 <?php if (!empty($announcements)): ?>
-<div class="fixed inset-x-0 bottom-0 z-40 bg-transparent text-slate-50">
+<div class="fixed inset-x-0 bottom-0 z-40 school-news-dock bg-transparent text-slate-50">
   <div class="news-broadcast">
     <div class="news-brand">
       <div class="news-brand-inner">
