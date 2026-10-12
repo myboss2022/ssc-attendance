@@ -43,6 +43,8 @@ The login page's password reset sends a six-digit, single-use code to the email 
 
 Set them in Vercel Project Settings > Environment Variables for Production (and Preview if needed), then redeploy. For XAMPP, set them in the Apache/PHP environment and restart Apache. Never use your normal Gmail password, expose the App Password in client code, commit it, or send it in chat. Reset email is unavailable until SMTP settings are configured. Codes expire after 10 minutes and are limited to five verification attempts per request.
 
+After a successful send, the reset page displays a six-digit code entry form. Invalid email addresses, emails without a matching Admin/SSC account, and delivery failures display an error instead.
+
 ### Vercel deployment
 
 Vercel does not provide an official PHP runtime. This project uses the community-maintained `vercel-php` runtime; verify that runtime is available to your Vercel account before deploying. The `vercel.json` catch-all routes requests through `api/index.php`, which dispatches PHP pages and serves the app's static asset directories. On Vercel, PHP sessions are stored in the Supabase `app_sessions` table rather than a temporary function filesystem.

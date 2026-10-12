@@ -23,6 +23,10 @@ if (!empty($_SESSION['password_reset_flash'])) {
     $notice = $_SESSION['password_reset_flash'];
     unset($_SESSION['password_reset_flash']);
 }
+if (!empty($_SESSION['password_reset_error'])) {
+    $error = $_SESSION['password_reset_error'];
+    unset($_SESSION['password_reset_error']);
+}
 
 $reset = $_SESSION['password_reset'] ?? null;
 if ($reset && (int)$reset['expires_at'] < time()) {
@@ -39,30 +43,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($action === 'request_code') {
             $email = strtolower(trim((string)($_POST['email'] ?? '')));
             $lastRequest = (int)($_SESSION['password_reset_last_request'] ?? 0);
-            $genericNotice = 'If that email is linked to an account, a reset code should arrive shortly. If it does not arrive, wait one minute before requesting another code or contact the site administrator.';
             if (time() - $lastRequest < 60) {
-                $_SESSION['password_reset_flash'] = $genericNotice;
+                $_SESSION['password_reset_error'] = 'Please wait one minute before requesting another reset code.';
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['password_reset_error'] = 'Enter a valid email address.';
             } else {
                 $_SESSION['password_reset_last_request'] = time();
                 unset($_SESSION['password_reset']);
                 $accounts = [];
-                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    foreach (['admin' => 'admin_users', 'ssc' => 'ssc_users'] as $type => $table) {
-                        $lookup = $conn->prepare("SELECT id,full_name FROM {$table} WHERE lower(email)=lower(?) LIMIT 1");
-                        $lookup->bind_param('s', $email);
-                        $lookup->execute();
-                        $account = $lookup->get_result()->fetch_assoc();
-                        if ($account) {
-                            $accounts[] = [
-                                'id' => (int)$account['id'],
-                                'type' => $type,
-                                'name' => $account['full_name'],
-                            ];
-                        }
+                foreach (['admin' => 'admin_users', 'ssc' => 'ssc_users'] as $type => $table) {
+                    $lookup = $conn->prepare("SELECT id,full_name FROM {$table} WHERE lower(email)=lower(?) LIMIT 1");
+                    $lookup->bind_param('s', $email);
+                    $lookup->execute();
+                    $account = $lookup->get_result()->fetch_assoc();
+                    if ($account) {
+                        $accounts[] = [
+                            'id' => (int)$account['id'],
+                            'type' => $type,
+                            'name' => $account['full_name'],
+                        ];
                     }
                 }
 
-                if ($accounts) {
+                if (!$accounts) {
+                    $_SESSION['password_reset_error'] = 'No Admin or SSC account was found with that email address.';
+                } else {
                     $code = sprintf('%06d', random_int(0, 999999));
                     try {
                         send_password_reset_code($email, $code);
@@ -74,12 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'accounts' => $accounts,
                             'verified' => false,
                         ];
+                        $_SESSION['password_reset_flash'] = 'A six-digit reset code was sent to your email. Enter it below.';
                     } catch (Throwable $exception) {
                         error_log('Password reset email delivery failed: '.$exception->getMessage());
+                        $_SESSION['password_reset_error'] = 'We could not send the reset code. Check the email settings or try again later.';
                     }
                 }
-
-                $_SESSION['password_reset_flash'] = $genericNotice;
             }
             header('Location: forgot_password.php');
             exit;
