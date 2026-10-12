@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $rows = $conn->query(
-    'SELECT id,full_name,username,email,permissions,account_status,last_login,created_at
+    'SELECT id,full_name,username,email,permissions,account_status,last_login
      FROM ssc_users ORDER BY full_name'
 );
 $pageTitle = 'SSC Account Management';

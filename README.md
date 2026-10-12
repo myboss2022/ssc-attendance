@@ -51,6 +51,8 @@ Vercel does not provide an official PHP runtime. This project uses the community
 
 The PHP function is pinned to Vercel's Singapore region (`sin1`) to keep dynamic requests close to users in the Philippines and Southeast Asia. For lowest database latency, set the function region to the same or nearest region as the Supabase project.
 
+If the Supabase `ssc_users` table is missing its `created_at` column, run [`supabase_restore_ssc_users_created_at.sql`](./supabase_restore_ssc_users_created_at.sql) in the Supabase SQL Editor. The migration is safe to rerun; existing rows receive the migration time because their original creation times cannot be reconstructed if the column was deleted.
+
 Production URL: https://ssc-attendance-opal.vercel.app
 GitHub repository: https://github.com/myboss2022/ssc-attendance. Pushes to `main` automatically deploy to Vercel Production; other branches create Preview deployments.
 
