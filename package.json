@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build:css": "tailwindcss -i ./assets/input.css -o ./assets/output.css --minify",
-    "watch:css": "tailwindcss -i ./assets/input.css -o ./assets/output.css --watch"
+    "build:css": "tailwindcss --config tailwind.config.js --input assets/input.css --output assets/tailwind.css --minify",
+    "watch:css": "tailwindcss --config tailwind.config.js --input assets/input.css --output assets/tailwind.css --watch"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.31"
+    "tailwindcss": "3.4.17"
   }
 }
