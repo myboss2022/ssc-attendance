@@ -103,8 +103,9 @@
         modal.classList.remove('camera-mobile-fullscreen');
         var appRect = scanApp.getBoundingClientRect();
         var frameRect = frame.getBoundingClientRect();
-        modal.style.top = (frameRect.top - appRect.top) + 'px';
-        modal.style.left = (frameRect.left - appRect.left) + 'px';
+        var appStyle = window.getComputedStyle(scanApp);
+        modal.style.top = (frameRect.top - appRect.top - parseFloat(appStyle.borderTopWidth || '0')) + 'px';
+        modal.style.left = (frameRect.left - appRect.left - parseFloat(appStyle.borderLeftWidth || '0')) + 'px';
         modal.style.width = frameRect.width + 'px';
         modal.style.setProperty('height', frameRect.height + 'px', 'important');
         modal.style.setProperty('min-height', frameRect.height + 'px', 'important');
