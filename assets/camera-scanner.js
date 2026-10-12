@@ -13,8 +13,9 @@
     var cameraButton = document.getElementById('cameraBtn');
     var cameraFooter = document.getElementById('cameraFooter');
     var scanApp = document.getElementById('scanApp');
+    var frame = document.getElementById('frame');
     var hiddenInput = document.getElementById('qrHidden');
-    if (!modal || !video || !status || !hiddenInput || !cameraButton || !scanApp) return;
+    if (!modal || !video || !status || !hiddenInput || !cameraButton || !scanApp || !frame) return;
 
     var dragMoved = false;
     var dragStartX = 0;
@@ -120,6 +121,11 @@
     var generation = 0;
     var cooldownMs = 1800;
     var absenceTimer = null;
+    var openingCamera = false;
+    var detectorFailures = 0;
+    var lastDetectorRun = 0;
+
+    var qrFormats = ['qr_code', 'micro_qr_code', 'code_128', 'code_39', 'code_93', 'ean_13', 'ean_8', 'upc_a', 'upc_e', 'itf', 'codabar', 'data_matrix', 'pdf417', 'aztec'];
 
     function setStatus(message) {
         status.textContent = message;
@@ -158,6 +164,7 @@
 
     function stopCameraScanner(message) {
         generation += 1;
+        openingCamera = false;
         stopDecoder();
         if (cameraStream) {
             cameraStream.getTracks().forEach(function (track) { track.stop(); });
@@ -240,46 +247,88 @@
 
     async function scanFrame(token) {
         if (!isScanning || token !== generation || !decoder || video.readyState < 2) return;
+        if (performance.now() - lastDetectorRun < 120) {
+            scheduleFrame(token);
+            return;
+        }
+        lastDetectorRun = performance.now();
         try {
             var results = await decoder.detect(video);
             if (token !== generation || !isScanning) return;
+            detectorFailures = 0;
             var result = results && results.length ? results[0] : null;
             var code = result ? validDecodedValue(result.rawValue) : '';
             if (code) handleDetected(code, token);
             else if (!codeVisible) setStatus('Camera ready. Point the camera at a QR code or barcode.');
-        } catch (error) {}
+        } catch (error) {
+            if (token !== generation || !isScanning) return;
+            detectorFailures += 1;
+            if (detectorFailures >= 3) {
+                decoder = null;
+                setStatus('Switching to a compatible QR/barcode decoder...');
+                startZXing(token);
+                return;
+            }
+        }
         scheduleFrame(token);
     }
 
     function startZXing(token) {
         if (!window.ZXingBrowser || token !== generation || !cameraStream) {
-            setStatus('Camera ready. Point the camera at a QR code or barcode.');
+            isScanning = false;
+            setStatus('Camera opened, but the QR/barcode decoder did not load. Reload the page and try again.');
             return;
         }
-        zxingReader = new ZXingBrowser.BrowserMultiFormatReader();
-        zxingReader.timeBetweenDecodingAttempts = 80;
-        isScanning = true;
-        setStatus('Camera ready. Point the camera at a QR code or barcode.');
-        zxingReader.decodeFromVideoElement(video, function (result) {
-            if (!isScanning || token !== generation || !result) return;
-            handleDetected(result.text, token);
-        });
+        try {
+            zxingReader = new ZXingBrowser.BrowserMultiFormatReader();
+            zxingReader.timeBetweenDecodingAttempts = 120;
+            isScanning = true;
+            setStatus('Camera ready. Point the camera at a QR code or barcode.');
+            var decoding = zxingReader.decodeFromVideoElement(video, function (result) {
+                if (!isScanning || token !== generation || !result) return;
+                handleDetected(result.text, token);
+            });
+            if (decoding && typeof decoding.catch === 'function') {
+                decoding.catch(function (error) {
+                    if (token !== generation || !isScanning) return;
+                    isScanning = false;
+                    setStatus('Could not start the QR/barcode decoder. Close the camera and try again.');
+                    console.error('ZXing camera decoder failed:', error);
+                });
+            }
+        } catch (error) {
+            isScanning = false;
+            setStatus('Could not start the QR/barcode decoder. Close the camera and try again.');
+            console.error('ZXing camera decoder failed:', error);
+        }
     }
 
-    function startDecoder(token) {
+    async function startDecoder(token) {
+        if (token !== generation) return;
         if ('BarcodeDetector' in window) {
             try {
-                decoder = new BarcodeDetector({ formats: ['qr_code', 'code_128', 'code_39', 'code_93', 'ean_13', 'ean_8', 'upc_a', 'upc_e', 'itf'] });
+                var formats = qrFormats.slice();
+                if (BarcodeDetector.getSupportedFormats) {
+                    var supportedFormats = await BarcodeDetector.getSupportedFormats();
+                    if (token !== generation) return;
+                    formats = formats.filter(function (format) { return supportedFormats.indexOf(format) !== -1; });
+                }
+                if (!formats.length) throw new Error('No supported barcode formats.');
+                decoder = new BarcodeDetector({ formats: formats });
+                detectorFailures = 0;
+                lastDetectorRun = 0;
                 isScanning = true;
                 setStatus('Camera ready. Point the camera at a QR code or barcode.');
                 scheduleFrame(token);
                 return;
             } catch (error) { decoder = null; }
         }
+        if (token !== generation) return;
         startZXing(token);
     }
 
     async function openCamera() {
+        if (openingCamera) return;
         stopCameraScanner();
         generation += 1;
         var token = generation;
@@ -297,20 +346,85 @@
             setStatus('Camera requires HTTPS on Android/iOS. Use a secure network address.');
             return;
         }
+        openingCamera = true;
         try {
-            var stream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    facingMode: { ideal: usingFrontCamera ? 'user' : 'environment' }
-                },
-                audio: false
-            });
+            var stream;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: { ideal: usingFrontCamera ? 'user' : 'environment' },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+            } catch (preferredError) {
+                if (!['OverconstrainedError', 'NotFoundError', 'ConstraintNotSatisfiedError'].includes(preferredError && preferredError.name)) {
+                    throw preferredError;
+                }
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            }
             if (token !== generation) {
                 stream.getTracks().forEach(function (track) { track.stop(); });
                 return;
             }
             cameraStream = stream;
+            try {
+                var cameras = (await navigator.mediaDevices.enumerateDevices()).filter(function (device) {
+                    return device.kind === 'videoinput' && device.deviceId;
+                });
+                var wantedCamera = cameras.find(function (device) {
+                    return usingFrontCamera
+                        ? /front|user|facetime/i.test(device.label)
+                        : /back|rear|environment|world/i.test(device.label);
+                });
+                var activeTrack = cameraStream.getVideoTracks()[0];
+                if (wantedCamera && activeTrack && wantedCamera.deviceId !== activeTrack.getSettings().deviceId) {
+                    var initialStream = cameraStream;
+                    cameraStream = await navigator.mediaDevices.getUserMedia({
+                        video: { deviceId: { exact: wantedCamera.deviceId } },
+                        audio: false
+                    });
+                    initialStream.getTracks().forEach(function (track) { track.stop(); });
+                }
+            } catch (cameraSelectionError) {
+                console.warn('Could not select the preferred camera; using the browser-selected camera.', cameraSelectionError);
+            }
+            if (token !== generation) {
+                cameraStream.getTracks().forEach(function (track) { track.stop(); });
+                cameraStream = null;
+                return;
+            }
             video.srcObject = cameraStream;
-            video.play().catch(function () {});
+            video.muted = true;
+            video.playsInline = true;
+            await video.play();
+            if (token !== generation) return;
+            if (video.readyState < 2 || !video.videoWidth) {
+                await new Promise(function (resolve, reject) {
+                    var timeout = window.setTimeout(function () {
+                        cleanup();
+                        reject(new Error('Camera preview took too long to start.'));
+                    }, 8000);
+                    function cleanup() {
+                        window.clearTimeout(timeout);
+                        video.removeEventListener('loadeddata', onReady);
+                        video.removeEventListener('error', onError);
+                    }
+                    function onReady() {
+                        cleanup();
+                        resolve();
+                    }
+                    function onError() {
+                        cleanup();
+                        reject(video.error || new Error('Camera preview could not start.'));
+                    }
+                    video.addEventListener('loadeddata', onReady, { once: true });
+                    video.addEventListener('error', onError, { once: true });
+                    if (video.readyState >= 2 && video.videoWidth) onReady();
+                });
+            }
+            if (token !== generation) return;
             var videoTrack = cameraStream.getVideoTracks()[0];
             if (videoTrack && videoTrack.applyConstraints) {
                 var qualityConstraints = {
@@ -324,13 +438,24 @@
                 }
                 videoTrack.applyConstraints(qualityConstraints).catch(function () {});
             }
-            startDecoder(token);
+            await startDecoder(token);
+            openingCamera = false;
+            var activeVideoTrack = cameraStream && cameraStream.getVideoTracks()[0];
+            if (activeVideoTrack) {
+                activeVideoTrack.addEventListener('ended', function () {
+                    if (token !== generation) return;
+                    stopCameraScanner('Camera connection ended. Tap the camera button to reconnect.');
+                }, { once: true });
+            }
         } catch (error) {
+            openingCamera = false;
             var message = 'Camera access failed. Please allow camera permission.';
             if (error && error.name === 'NotAllowedError') message = 'Camera permission was blocked. Allow camera access in browser settings.';
             else if (error && error.name === 'NotFoundError') message = 'No camera was found on this device.';
             else if (error && error.name === 'NotReadableError') message = 'The camera is already being used by another app.';
             else if (error && error.name === 'SecurityError') message = 'Camera requires HTTPS on Android/iOS. Use a secure network address.';
+            else if (error && error.name === 'NotSupportedError') message = 'This browser could not start video playback. Try another supported browser.';
+            else if (error && error.message === 'Camera preview took too long to start.') message = error.message + ' Close other apps using the camera and try again.';
             stopCameraScanner(message);
         }
     }
@@ -365,14 +490,8 @@
         if (modal.classList.contains('hidden')) openCamera();
         else closeCamera();
     }), true);
-    cameraButton.addEventListener('click', function () {
-        var wasHidden = modal.classList.contains('hidden');
-        window.setTimeout(function () {
-            if (wasHidden && modal.classList.contains('hidden')) openCamera();
-        }, 0);
-    });
     showScannerPanel();
     if (new URLSearchParams(window.location.search).get('camera') === '1') {
-        window.addEventListener('load', openCamera, { once: true });
+        openCamera();
     }
 })();
