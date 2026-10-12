@@ -26,9 +26,5 @@
       "src": "/(.*)",
       "dest": "/api/index.php"
     }
-  ],
-  "env": {
-    "PHP_EXTENSIONS": "pdo_pgsql,opcache",
-    "PHP_INI_SCAN_DIR": "/var/task/php/conf.d:/etc/php/conf.d"
-  }
+  ]
 }
