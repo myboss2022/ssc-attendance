@@ -4,7 +4,9 @@ date_default_timezone_set('Asia/Manila');
 if ((!defined('APP_SKIP_SESSION_START') || APP_SKIP_SESSION_START !== true) && session_status() === PHP_SESSION_NONE) {
     if (getenv('VERCEL') === '1') {
         require_once __DIR__.'/database_session_handler.php';
-        session_set_save_handler(new SupabaseSessionHandler(), true);
+        $sessionHandler = new SupabaseSessionHandler();
+        $GLOBALS['supabase_session_handler'] = $sessionHandler;
+        session_set_save_handler($sessionHandler, true);
         session_set_cookie_params([
             'secure' => true,
             'httponly' => true,
@@ -33,16 +35,21 @@ function db() {
         exit('Database connection error. Enable the PHP pdo_pgsql extension.');
     }
     try {
-        $pdo = new PDO(
-            "pgsql:host={$host};port={$port};dbname={$name};sslmode={$sslmode}",
-            $user,
-            $password,
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]
-        );
+        $sessionHandler = $GLOBALS['supabase_session_handler'] ?? null;
+        if ($sessionHandler instanceof SupabaseSessionHandler) {
+            $pdo = $sessionHandler->getConnection();
+        } else {
+            $pdo = new PDO(
+                "pgsql:host={$host};port={$port};dbname={$name};sslmode={$sslmode}",
+                $user,
+                $password,
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]
+            );
+        }
         $pdo->exec("SET TIME ZONE 'Asia/Manila'");
     } catch (PDOException $exception) {
         error_log('Supabase PostgreSQL connection failed: '.$exception->getMessage());

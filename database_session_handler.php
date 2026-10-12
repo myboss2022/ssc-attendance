@@ -38,6 +38,15 @@ final class SupabaseSessionHandler implements SessionHandlerInterface
         return true;
     }
 
+    public function getConnection(): PDO
+    {
+        if (!$this->pdo instanceof PDO) {
+            throw new RuntimeException('Supabase session database connection is not available.');
+        }
+
+        return $this->pdo;
+    }
+
     public function read($id): string
     {
         $this->lock($id);
