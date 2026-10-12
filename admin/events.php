@@ -38,12 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $statement = $conn->prepare(
                 'INSERT INTO events(event_name,description,event_type,venue,event_date,start_time,end_time,
                  scan_in_start,scan_in_end,scan_out_start,scan_out_end,fine_amount,status)
-                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,"DRAFT")'
+                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)'
             );
+            $status = 'DRAFT';
             $statement->bind_param(
-                'sssssssssssd',
+                'sssssssssssds',
                 $name, $description, $type, $venue, $date, $start, $end,
-                $scanInStart, $scanInEnd, $scanOutStart, $scanOutEnd, $fine
+                $scanInStart, $scanInEnd, $scanOutStart, $scanOutEnd, $fine, $status
             );
             if ($statement->execute()) {
                 $message = 'Event created. Register students before activating it.';
