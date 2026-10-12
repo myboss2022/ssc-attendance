@@ -86,6 +86,18 @@
     modal.classList.remove('fixed', 'inset-0', 'p-4');
     modal.classList.add('absolute', 'z-20', 'rounded-3xl', 'bg-slate-50');
     function alignCameraModal() {
+        if (!modal.classList.contains('hidden') && window.matchMedia('(max-width: 767px), (max-height: 500px) and (pointer: coarse)').matches) {
+            if (modal.parentNode !== document.body) document.body.appendChild(modal);
+            modal.classList.add('camera-mobile-fullscreen');
+            modal.style.removeProperty('top');
+            modal.style.removeProperty('left');
+            modal.style.removeProperty('width');
+            modal.style.removeProperty('height');
+            modal.style.removeProperty('min-height');
+            return;
+        }
+        if (modal.parentNode !== scanApp) scanApp.appendChild(modal);
+        modal.classList.remove('camera-mobile-fullscreen');
         var appRect = scanApp.getBoundingClientRect();
         var frameRect = frame.getBoundingClientRect();
         modal.style.top = (frameRect.top - appRect.top) + 'px';
@@ -184,6 +196,7 @@
         cameraButton.classList.remove('gap-2', 'px-3', 'py-1');
         cameraButton.classList.add('h-9', 'w-9', 'justify-center', 'text-slate-700');
         cameraButton.classList.remove('text-emerald-700');
+        cameraButton.classList.add('camera-active');
         cameraButton.innerHTML = '<img src="logo/Camera.png" alt="" class="scanner-toggle-icon h-9 w-9 object-contain">';
         cameraButton.title = 'Return to scanner input';
         cameraButton.setAttribute('aria-label', 'Return to scanner input');
@@ -193,9 +206,11 @@
     function showScannerPanel() {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        alignCameraModal();
         cameraButton.classList.remove('gap-2', 'px-3', 'py-1');
         cameraButton.classList.add('h-9', 'w-9', 'justify-center', 'text-slate-700');
         cameraButton.classList.remove('text-emerald-700');
+        cameraButton.classList.remove('camera-active');
         cameraButton.innerHTML = '<img src="logo/Camera.png" alt="" class="scanner-toggle-icon h-9 w-9 object-contain">';
         cameraButton.title = 'Open camera scanner';
         cameraButton.setAttribute('aria-label', 'Open camera scanner');
