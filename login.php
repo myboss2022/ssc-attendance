@@ -112,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="field"><label for="username">Username</label><input id="username" name="username" required autocomplete="username"></div>
       <div class="field"><label for="password">Password</label><input id="password" type="password" name="password" required autocomplete="current-password"></div>
       <div class="button-row"><button class="button" type="submit">Login</button></div>
+      <a class="back" href="forgot_password.php">Forgot password? Reset using your account email</a>
     </form>
     <?php if(!$hasAdmin): ?><div class="setup">Administrator setup is required before access.</div><?php endif; ?>
     <a class="back" href="index1.php">Back to event attendance</a>

@@ -25,6 +25,7 @@ if (strtolower(pathinfo($target, PATHINFO_EXTENSION)) === 'php') {
         'index.php',
         'index1.php',
         'login.php',
+        'forgot_password.php',
         'logout.php',
         'change_password.php',
         'scan.php',

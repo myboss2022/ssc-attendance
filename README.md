@@ -31,6 +31,18 @@ The application connects server-side to Supabase PostgreSQL using PDO. It needs 
 
 Keep the database password only in server-side environment settings. Do not put it in browser JavaScript, commit it, or use a Supabase `anon`/`service_role` API key as the PostgreSQL password.
 
+### Password reset email
+
+The login page's password reset sends a six-digit, single-use code to the email address stored on an Admin or SSC user account. Configure these server-side environment variables to enable delivery through Gmail SMTP:
+
+- `GMAIL_SMTP_USER` - the Gmail account used to send reset emails
+- `GMAIL_SMTP_APP_PASSWORD` - an App Password for that Gmail account (enable 2-Step Verification first)
+- `GMAIL_SMTP_HOST` - optional; defaults to `smtp.gmail.com`
+- `GMAIL_SMTP_PORT` - optional; defaults to `587` (STARTTLS)
+- `MAIL_FROM_NAME` - optional; defaults to `SSC Attendance`
+
+Set them in Vercel Project Settings > Environment Variables for Production (and Preview if needed), then redeploy. For XAMPP, set them in the Apache/PHP environment and restart Apache. Never use your normal Gmail password, expose the App Password in client code, commit it, or send it in chat. Reset email is unavailable until SMTP settings are configured. Codes expire after 10 minutes and are limited to five verification attempts per request.
+
 ### Vercel deployment
 
 Vercel does not provide an official PHP runtime. This project uses the community-maintained `vercel-php` runtime; verify that runtime is available to your Vercel account before deploying. The `vercel.json` catch-all routes requests through `api/index.php`, which dispatches PHP pages and serves the app's static asset directories. On Vercel, PHP sessions are stored in the Supabase `app_sessions` table rather than a temporary function filesystem.
