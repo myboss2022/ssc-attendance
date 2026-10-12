@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $scanOutStart = $_POST['scan_out_start'] ?? '';
         $scanOutEnd = $_POST['scan_out_end'] ?? '';
         $fine = (float)($_POST['fine_amount'] ?? 0);
+        $status = 'DRAFT';
 
         if (!$name || !$date || !$start || !$end || !$scanInStart || !$scanInEnd || !$scanOutStart || !$scanOutEnd) {
           $error = 'Complete all required event details and time fields.';
@@ -38,12 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $statement = $conn->prepare(
                 'INSERT INTO events(event_name,description,event_type,venue,event_date,start_time,end_time,
                  scan_in_start,scan_in_end,scan_out_start,scan_out_end,fine_amount,status)
-                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,"DRAFT")'
+                 VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)'
             );
             $statement->bind_param(
-                'sssssssssssd',
+                'sssssssssssds',
                 $name, $description, $type, $venue, $date, $start, $end,
-                $scanInStart, $scanInEnd, $scanOutStart, $scanOutEnd, $fine
+                $scanInStart, $scanInEnd, $scanOutStart, $scanOutEnd, $fine, $status
             );
             if ($statement->execute()) {
                 $message = 'Event created. Register students before activating it.';
@@ -106,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $activate->bind_param('i', $eventId);
             if ($activate->execute() && $activate->affected_rows === 1) {
               $students = $conn->query("SELECT id FROM students WHERE account_status='ACTIVE'");
-              $register = $conn->prepare('INSERT IGNORE INTO event_students(event_id,student_id) VALUES(?,?)');
+              $register = $conn->prepare('INSERT INTO event_students(event_id,student_id) VALUES(?,?) ON CONFLICT DO NOTHING');
               while ($student = $students->fetch_assoc()) {
                 $studentId = (int)$student['id'];
                 $register->bind_param('ii', $eventId, $studentId);
@@ -169,7 +170,7 @@ ob_start();
   <?php if ($error): ?><div class="rounded-lg bg-rose-100 p-3 text-rose-800"><?php echo h($error); ?></div><?php endif; ?>
 
   <div class="rounded-2xl bg-white p-5 shadow">
-    <div class="mb-4 flex items-center justify-between gap-3"><div class="text-lg font-semibold"><?php echo $editEvent ? 'Edit event' : 'Create event'; ?></div><?php if ($editEvent): ?><a href="events.php" class="text-sm font-semibold text-slate-600 hover:text-indigo-700">Cancel edit</a><?php endif; ?></div>
+    <div class="mb-4 flex items-center justify-between gap-3"><div class="text-lg font-semibold"><?php echo $editEvent ? 'Edit event' : 'Create event'; ?></div><?php if ($editEvent): ?><a href="events.php" class="text-xs text-blue-600">Clear</a><?php endif; ?></div>
     <form method="post" class="grid gap-3 md:grid-cols-4">
       <input type="hidden" name="action" value="<?php echo $editEvent ? 'update' : 'create'; ?>">
       <?php if ($editEvent): ?><input type="hidden" name="event_id" value="<?php echo (int)$editEvent['id']; ?>"><?php endif; ?>
@@ -203,8 +204,9 @@ ob_start();
               <td class="px-2 py-3"><?php echo number_format((int)$event['registered_count']); ?></td>
               <td class="px-2 py-3"><?php echo h($event['status']); ?></td>
               <td class="px-2 py-3"><div class="flex flex-wrap gap-2"><a href="events.php?edit_id=<?php echo (int)$event['id']; ?>" class="rounded bg-amber-500 px-2 py-1 text-xs text-white hover:bg-amber-600">Edit</a>
-                <?php if ($event['status'] !== 'ACTIVE' && $event['status'] !== 'CLOSED'): ?><form method="post"><input type="hidden" name="action" value="activate"><input type="hidden" name="event_id" value="<?php echo (int)$event['id']; ?>"><button class="rounded bg-emerald-600 px-2 py-1 text-xs text-white">Activate</button></form><?php endif; ?>
-                <?php if ($event['status'] !== 'CLOSED'): ?><form method="post"><input type="hidden" name="action" value="register_all"><input type="hidden" name="event_id" value="<?php echo (int)$event['id']; ?>"><button class="rounded bg-indigo-600 px-2 py-1 text-xs text-white">Register all active</button></form><form method="post"><input type="hidden" name="action" value="close"><input type="hidden" name="event_id" value="<?php echo (int)$event['id']; ?>"><button class="rounded bg-slate-700 px-2 py-1 text-xs text-white">Close</button></form><?php endif; ?>
+                <?php if ($event['status'] !== 'ACTIVE' && $event['status'] !== 'CLOSED'): ?><form method="post" style="display:inline"><input type="hidden" name="action" value="activate"><input type="hidden" name="event_id" value="<?php echo (int)$event['id']; ?>"><button type="submit" class="rounded bg-emerald-600 px-2 py-1 text-xs text-white hover:bg-emerald-700">Activate</button></form><?php endif; ?>
+                <?php if ($event['status'] !== 'CLOSED'): ?><form method="post" style="display:inline"><input type="hidden" name="action" value="close"><input type="hidden" name="event_id" value="<?php echo (int)$event['id']; ?>"><button type="submit" class="rounded bg-slate-600 px-2 py-1 text-xs text-white hover:bg-slate-700">Close</button></form><?php endif; ?>
+                <?php if ($event['status'] !== 'CLOSED'): ?><form method="post" style="display:inline"><input type="hidden" name="action" value="register_all"><input type="hidden" name="event_id" value="<?php echo (int)$event['id']; ?>"><button type="submit" class="rounded bg-blue-600 px-2 py-1 text-xs text-white hover:bg-blue-700">Register All</button></form><?php endif; ?>
               </div></td>
             </tr>
           <?php endwhile; ?>
