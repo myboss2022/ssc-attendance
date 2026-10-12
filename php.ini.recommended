@@ -1,0 +1,25 @@
+; Recommended PHP optimizations for Vercel deployment
+; Copy these settings to your hosting provider's PHP configuration
+
+[opcache]
+; Enable OPcache (opcode caching for faster PHP execution)
+opcache.enable=1
+opcache.enable_cli=1
+opcache.memory_consumption=128
+opcache.interned_strings_buffer=8
+opcache.max_accelerated_files=4000
+opcache.revalidate_freq=2
+opcache.fast_shutdown=1
+
+[session]
+; Use file-based sessions (PDO is slower for sessions)
+session.save_handler=files
+session.gc_maxlifetime=3600
+
+[pdo]
+; Set reasonable timeout values
+default_socket_timeout=10
+
+[database]
+; Increase max connections from pool
+max_connections=20
