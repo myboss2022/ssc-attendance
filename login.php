@@ -86,12 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   *{box-sizing:border-box}
   body{min-height:100vh;margin:0;background:linear-gradient(135deg,#ede9fe 0%,#fff 52%,#e0e7ff 100%);display:flex;align-items:center}
   .login-wrap{width:100%;max-width:448px;margin:0 auto;padding:24px}
-  .brand{margin-bottom:24px}
-  .brand-row{display:flex;align-items:center;gap:0}.brand-row>div:last-child{min-width:0;flex:1;text-align:center}
-  .brand-mark{width:46px;height:46px;flex:0 0 46px;margin-right:-6px;border-radius:14px;background:#7c3aed;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(76,29,149,.25);font-weight:700;font-size:18px;overflow:hidden}
+  .brand{margin-bottom:24px;text-align:center}
+  .brand-row{display:flex;align-items:center;justify-content:center;gap:10px}
+  .brand-mark{width:48px;height:48px;flex:0 0 48px;border-radius:14px;overflow:hidden}
   .brand-mark img{width:100%;height:100%;object-fit:cover}
-  .brand-name{font-size:14px;line-height:1.3;letter-spacing:1.5px;text-transform:uppercase;color:#64748b}
-  .brand-title{margin-top:4px;text-align:center;font-size:24px;line-height:1.25;font-weight:700;color:#1e293b}
+  .brand-name{min-width:0;font-size:20px;line-height:1.3;font-weight:700;color:#1e293b}
+  .brand-title{margin-top:8px;text-align:center;font-size:24px;line-height:1.25;font-weight:700;color:#1e293b}
   .login-card{padding:20px;background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(30,41,59,.12)}
   .field{margin-bottom:12px}.field label{display:block;font-size:14px;color:#475569}.field input{width:100%;margin-top:4px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:4px;font:inherit;outline:none}.field input:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.2)}
   .button-row{display:flex;justify-content:flex-end;margin-top:16px}.button{border:0;border-radius:8px;background:#7c3aed;color:#fff;padding:10px 16px;font-weight:600;font:inherit;cursor:pointer}.button:hover{background:#6d28d9}
@@ -99,14 +99,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   .modal-backdrop{position:fixed;inset:0;z-index:10;background:rgba(15,23,42,.5);display:flex;align-items:center;justify-content:center;padding:20px}
   .modal{width:100%;max-width:440px;padding:24px;background:#fff;border-radius:16px;box-shadow:0 20px 50px rgba(15,23,42,.25)}
   .modal h2{margin:0;color:#1e1b4b;font-size:22px}.modal p{margin:8px 0 18px;color:#64748b;font-size:14px;line-height:1.5}.modal .button{width:100%;margin-top:4px}
-  .setup,.back{display:block;text-align:center;font-size:14px;text-decoration:none}.setup{margin-top:18px;color:#6d28d9}.back{margin-top:14px;color:#64748b}.setup:hover,.back:hover{text-decoration:underline}@media(max-width:520px){.login-wrap{padding:16px}.brand-row{align-items:flex-start}.brand-mark{width:40px;height:40px;flex-basis:40px;margin-right:-4px}.brand-name{font-size:11px;letter-spacing:1px;overflow-wrap:anywhere}.brand-title{font-size:21px}.login-card{padding:16px}.button-row{justify-content:stretch}.button-row .button{width:100%}}
+  .setup,.back{display:block;text-align:center;font-size:14px;text-decoration:none}.setup{margin-top:18px;color:#6d28d9}.back{margin-top:14px;color:#64748b}.setup:hover,.back:hover{text-decoration:underline}@media(max-width:520px){.login-wrap{padding:16px}.brand-row{gap:8px}.brand-mark{width:44px;height:44px;flex-basis:44px}.brand-name{font-size:18px;overflow-wrap:anywhere}.brand-title{font-size:21px}.login-card{padding:16px}.button-row{justify-content:stretch}.button-row .button{width:100%}}
 </style>
 <style>html,body{min-height:100%;overflow-x:hidden}body{min-height:100dvh;align-items:flex-start}.login-wrap{margin-top:auto;margin-bottom:auto}@media(max-height:560px){body{align-items:flex-start;overflow-y:auto}.login-wrap{margin-top:1rem;margin-bottom:1rem}}</style><script src="assets/app.js?v=20261011-progress" defer></script>
 <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
 </head>
 <body>
   <div class="login-wrap">
-    <div class="brand"><div class="brand-row"><div class="brand-mark"><img src="logo/SSC.png" alt="SSC logo"></div><div><div class="brand-name"><?php echo h($organizationName); ?></div><div class="brand-title">Admin Login</div></div></div></div>
+    <div class="brand"><div class="brand-row"><div class="brand-mark"><img src="logo/SSC.png" alt="SSC logo"></div><div class="brand-name"><?php echo h($organizationName); ?></div></div><div class="brand-title">Admin Login</div></div>
     <form method="post" class="login-card">
       <?php if($error): ?><div class="error"><?php echo h($error); ?></div><?php endif; ?>
       <div class="field"><label for="username">Username</label><input id="username" name="username" required autocomplete="username"></div>
