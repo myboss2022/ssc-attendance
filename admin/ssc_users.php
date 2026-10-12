@@ -61,8 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $rows = $conn->query(
-    'SELECT id,full_name,username,email,permissions,account_status,last_login
-     FROM ssc_users ORDER BY full_name'
+    "SELECT u.id,u.full_name,u.username,u.email,u.permissions,u.account_status,u.last_login,
+            (SELECT MIN(al.created_at)
+             FROM activity_logs al
+             WHERE al.entity_type='ssc_user'
+               AND al.entity_id=u.id
+               AND al.action='SSC account creation') AS account_created_at
+     FROM ssc_users u ORDER BY u.full_name"
 );
 $pageTitle = 'SSC Account Management';
 ob_start();
@@ -100,6 +105,7 @@ ob_start();
           <th class="px-2 py-2">Email</th>
           <th class="px-2 py-2">Permissions</th>
           <th class="px-2 py-2">Status</th>
+          <th class="px-2 py-2">Created</th>
           <th class="px-2 py-2">Last login</th>
         </tr></thead>
         <tbody>
@@ -110,6 +116,7 @@ ob_start();
               <td class="px-2 py-3"><?php echo h($user['email']); ?></td>
               <td class="px-2 py-3"><?php echo h(implode(', ', (array)json_decode($user['permissions'] ?? '[]', true))); ?></td>
               <td class="px-2 py-3"><?php echo h($user['account_status']); ?></td>
+              <td class="px-2 py-3"><?php echo $user['account_created_at'] ? h(date('M d, Y h:i A', strtotime($user['account_created_at']))) : 'Not recorded'; ?></td>
               <td class="px-2 py-3"><?php echo h($user['last_login'] ?? 'Never'); ?></td>
             </tr>
           <?php endwhile; ?>
