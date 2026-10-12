@@ -86,18 +86,6 @@
     modal.classList.remove('fixed', 'inset-0', 'p-4');
     modal.classList.add('absolute', 'z-20', 'rounded-3xl', 'bg-slate-50');
     function alignCameraModal() {
-        if (!modal.classList.contains('hidden') && window.matchMedia('(max-width: 767px), (max-height: 500px) and (pointer: coarse)').matches) {
-            if (modal.parentNode !== document.body) document.body.appendChild(modal);
-            modal.classList.add('camera-mobile-fullscreen');
-            modal.style.removeProperty('top');
-            modal.style.removeProperty('left');
-            modal.style.removeProperty('width');
-            modal.style.removeProperty('height');
-            modal.style.removeProperty('min-height');
-            return;
-        }
-        if (modal.parentNode !== scanApp) scanApp.appendChild(modal);
-        modal.classList.remove('camera-mobile-fullscreen');
         var appRect = scanApp.getBoundingClientRect();
         var frameRect = frame.getBoundingClientRect();
         modal.style.top = (frameRect.top - appRect.top) + 'px';
