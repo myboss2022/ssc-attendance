@@ -20,6 +20,83 @@ if ($event) {
 <script src="assets/app.js?v=20261011-progress" defer></script>
 <style>
 @media(max-width:640px){body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}main{padding:.75rem!important}.scan-frame{height:16rem!important}.glass{border-radius:1rem!important;padding:1rem!important}.glass .flex.items-center.justify-between{align-items:flex-start;flex-direction:column;gap:.75rem}.glass .flex.items-center.justify-between>div:last-child{width:100%;display:flex;flex-wrap:wrap;gap:.5rem}.glass .flex.items-center.justify-between a,.glass .flex.items-center.justify-between button{flex:1;text-align:center}.glass table{font-size:.75rem}.glass th,.glass td{padding:.5rem}.glass .h-8{height:auto;min-height:2rem}.scan-zoom-row{align-items:flex-start!important;flex-direction:column!important}.scan-zoom-row #status{line-height:1.35}.scan-zoom-row #scanZoomBtn{width:100%;justify-content:center}.camera-footer{left:calc(.75rem + env(safe-area-inset-left));bottom:calc(.75rem + env(safe-area-inset-bottom))}}
+#scanLayout > #scanApp,
+#scanLayout > #recentPanel { min-width: 0; }
+@media(max-width:767px), (max-height:500px) and (pointer:coarse) {
+  #scanLayout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100%;
+    min-width: 0;
+  }
+  #scanLayout > #scanApp,
+  #scanLayout > #recentPanel {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+  }
+  #scanApp { overflow: hidden; }
+  #frame { width: 100%; box-sizing: border-box; }
+  #recentPanel .overflow-x-auto {
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+  }
+  #recentPanel table { width: max-content; min-width: 38rem; }
+  .camera-footer {
+    right: calc(.75rem + env(safe-area-inset-right)) !important;
+    bottom: calc(.75rem + env(safe-area-inset-bottom)) !important;
+    left: auto !important;
+  }
+}
+.camera-mobile-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 90 !important;
+  box-sizing: border-box;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100svh !important;
+  height: 100dvh !important;
+  min-height: 0 !important;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+  background: #020617 !important;
+}
+.camera-mobile-fullscreen > div {
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  min-height: 0 !important;
+  border-radius: 0 !important;
+}
+.camera-mobile-fullscreen > div > div.bg-slate-950 {
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto !important;
+  min-height: 0;
+  padding: 0 !important;
+  background: #020617 !important;
+}
+@media(max-height:500px) and (pointer:coarse) {
+  main { padding: .5rem !important; }
+  .scan-frame { height: min(16rem, 38dvh) !important; min-height: 10rem; }
+}
+.camera-mobile-fullscreen .camera-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border-radius: 0 !important;
+}
+.camera-mobile-fullscreen .camera-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover !important;
+  object-position: center;
+}
 .scan-frame{position:relative}.scan-sweep{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,rgba(16,185,129,.9),transparent);box-shadow:0 0 12px rgba(16,185,129,.6)}
 .scan-toolbar-zoomed{position:fixed!important;top:0;right:0;left:0;z-index:70!important;margin:0!important;padding:.75rem max(1rem,calc((100vw - 88rem)/2 + 1.5rem))!important;background:rgba(248,250,252,.92);backdrop-filter:blur(16px);box-shadow:0 4px 18px rgba(15,23,42,.08)}.scan-layout-zoomed{position:fixed!important;top:var(--scan-toolbar-height,4.75rem)!important;right:0!important;bottom:0!important;left:0!important;z-index:60!important;width:100vw!important;height:calc(100vh - var(--scan-toolbar-height,4.75rem))!important;max-width:none!important;margin:0!important;padding:1rem max(1rem,calc((100vw - 88rem)/2 + 1.5rem)) 1.25rem!important;overflow:auto!important;background:rgba(255,255,255,.92)!important;display:flex!important;flex-direction:column!important;gap:1rem!important}.scan-layout-zoomed #scanApp{position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;flex:0 0 auto!important;border-radius:1.5rem!important}.scan-layout-zoomed #frame{height:clamp(13rem,34vh,26rem)!important;min-height:13rem}.scan-layout-zoomed .scan-zoom-row{flex-shrink:0}.scan-layout-zoomed>div:last-child{margin-top:0!important;max-height:clamp(12rem,34vh,28rem)!important;overflow:auto!important;flex:1 1 auto!important}.scan-layout-zoomed>div:last-child table{min-width:48rem}
 .camera-modal{background:transparent!important;backdrop-filter:none!important;overflow:hidden!important}.camera-modal>div{position:relative;display:flex;flex-direction:column;height:100%!important;max-height:100%!important;max-width:none!important;border:0!important;border-radius:1rem!important;background:transparent!important;box-shadow:none!important;overflow:hidden!important}.camera-modal .camera-actions{position:absolute;top:.75rem;right:.75rem;z-index:5;display:flex;justify-content:flex-end;gap:.5rem}.camera-modal .camera-actions button{background:rgba(255,255,255,.9);box-shadow:0 4px 12px rgba(15,23,42,.2)}.camera-modal>div>div.bg-slate-950{flex:1;min-height:0;height:100%!important;padding:0!important;background:transparent!important}.camera-modal .camera-frame{height:100%;min-height:0;border-radius:1rem;box-shadow:0 0 0 2px rgba(16,185,129,.5),0 0 28px rgba(16,185,129,.25) inset}.camera-preview{display:block;width:100%;height:100%;min-height:0;aspect-ratio:auto;object-fit:contain!important;background:#020617}.camera-modal .camera-frame>div.pointer-events-none{inset:8%}.scanner-toggle-icon{filter:grayscale(1) contrast(1.25);mix-blend-mode:multiply}.aurora{filter:blur(34px)!important;opacity:.82!important}.aurora.a1{background:radial-gradient(closest-side,rgba(16,185,129,.78),transparent 68%)!important}.aurora.a2{background:radial-gradient(closest-side,rgba(59,130,246,.68),transparent 68%)!important}
@@ -123,5 +200,5 @@ var clock=document.getElementById('clock');function tick(){clock.textContent=new
 var kiosk=document.getElementById('kioskBtn');kiosk.addEventListener('click',function(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()});document.addEventListener('fullscreenchange',function(){kiosk.textContent=document.fullscreenElement?'Exit Kiosk':'Enter Kiosk'});/*
 var cameraModal=document.getElementById('cameraModal'),cameraVideo=document.getElementById('cameraVideo'),cameraStatus=document.getElementById('cameraStatus'),switchCamera=document.getElementById('switchCamera'),cameraStream=null,cameraFrame=null,cameraDetector=null,cameraBusy=false,cameraSessionLocked=false,usingFrontCamera=false;function stopCamera(){if(cameraFrame){cancelAnimationFrame(cameraFrame);cameraFrame=null}if(cameraStream){cameraStream.getTracks().forEach(function(track){track.stop()});cameraStream=null}cameraVideo.srcObject=null}function closeCamera(){stopCamera();cameraModal.classList.add('hidden');cameraModal.classList.remove('flex');if(document.getElementById('qrHidden'))document.getElementById('qrHidden').focus()}async function submitCameraCode(code){if(!code||cameraSessionLocked)return;cameraSessionLocked=true;cameraBusy=true;window.SSC_SCAN_CONFIG.scanType='camera';document.getElementById('qrHidden').value=code;document.getElementById('qrHidden').dispatchEvent(new Event('input',{bubbles:true}));closeCamera()}async function scanCameraFrame(){if(!cameraStream||cameraBusy||cameraSessionLocked||!cameraDetector)return;try{var results=await cameraDetector.detect(cameraVideo);if(results.length){var code=String(results[0].rawValue||'').trim();if(code){submitCameraCode(code);return}}}catch(error){}cameraFrame=requestAnimationFrame(scanCameraFrame)}async function openCamera(){cameraSessionLocked=false;cameraBusy=false;cameraModal.classList.remove('hidden');cameraModal.classList.add('flex');cameraStatus.textContent='Waiting for camera...';if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){cameraStatus.textContent='Camera access is not supported on this browser.';return}try{cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:usingFrontCamera?'user':'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});cameraVideo.srcObject=cameraStream;await cameraVideo.play();cameraDetector=null;if('BarcodeDetector' in window){try{var formats=['qr_code','code_128','code_39','ean_13','ean_8','upc_a','upc_e','codabar','itf'];if(BarcodeDetector.getSupportedFormats){var supported=await BarcodeDetector.getSupportedFormats();formats=formats.filter(function(format){return supported.indexOf(format)!==-1})}cameraDetector=formats.length?new BarcodeDetector({formats:formats}):null}catch(detectorError){cameraDetector=null}}cameraStatus.textContent=cameraDetector?'Scanning QR/barcode...':'Camera is open. Starting local decoder...';if(cameraDetector)cameraFrame=requestAnimationFrame(scanCameraFrame)}catch(error){cameraStatus.textContent=error.name==='NotAllowedError'?'Camera permission denied. Allow camera access and try again.':'Unable to start the camera. Check camera permission and use HTTPS or localhost.'}}async function toggleCamera(){usingFrontCamera=!usingFrontCamera;stopCamera();switchCamera.textContent=usingFrontCamera?'Back camera':'Front camera';await openCamera()}document.getElementById('cameraBtn').addEventListener('click',openCamera);document.getElementById('closeCamera').addEventListener('click',closeCamera);document.getElementById('cameraCancel').addEventListener('click',closeCamera);switchCamera.addEventListener('click',toggleCamera);cameraModal.addEventListener('click',function(event){if(event.target===cameraModal)closeCamera()});if(new URLSearchParams(window.location.search).get('camera')==='1')window.addEventListener('load',openCamera);
 */</script>
-<script src="assets/camera-guard.js?v=16"></script><script src="assets/camera-scanner.js?v=16"></script><script src="assets/scan.js?v=18" defer></script><script>document.querySelectorAll('th').forEach(function(header){if(header.textContent.includes('Course / Grade / Section'))header.textContent=header.textContent.replace('Course / Grade / Section','Course / Year Level / Block')});</script>
+<script src="assets/camera-guard.js?v=16"></script><script src="assets/camera-scanner.js?v=17"></script><script src="assets/scan.js?v=18" defer></script><script>document.querySelectorAll('th').forEach(function(header){if(header.textContent.includes('Course / Grade / Section'))header.textContent=header.textContent.replace('Course / Grade / Section','Course / Year Level / Block')});</script>
 </body></html>

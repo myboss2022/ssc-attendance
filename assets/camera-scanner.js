@@ -13,8 +13,13 @@
     var cameraButton = document.getElementById('cameraBtn');
     var cameraFooter = document.getElementById('cameraFooter');
     var scanApp = document.getElementById('scanApp');
+    var frame = document.getElementById('frame');
     var hiddenInput = document.getElementById('qrHidden');
-    if (!modal || !video || !status || !hiddenInput || !cameraButton || !scanApp) return;
+    if (!modal || !video || !status || !hiddenInput || !cameraButton || !cameraFooter || !scanApp || !frame) return;
+
+    function isMobileScannerLayout() {
+        return window.matchMedia('(max-width: 767px), (max-height: 500px) and (pointer: coarse)').matches;
+    }
 
     var dragMoved = false;
     var dragStartX = 0;
@@ -25,6 +30,13 @@
 
     function restoreCameraPosition() {
         if (!cameraFooter) return;
+        if (isMobileScannerLayout()) {
+            cameraFooter.style.removeProperty('left');
+            cameraFooter.style.removeProperty('top');
+            cameraFooter.style.removeProperty('right');
+            cameraFooter.style.removeProperty('bottom');
+            return;
+        }
         try {
             var saved = JSON.parse(localStorage.getItem('sscCameraButtonPosition') || 'null');
             if (!saved) return;
@@ -37,7 +49,9 @@
 
     if (cameraFooter) {
         restoreCameraPosition();
+        window.addEventListener('resize', restoreCameraPosition);
         cameraFooter.addEventListener('pointerdown', function (event) {
+            if (isMobileScannerLayout()) return;
             if (event.button !== undefined && event.button !== 0) return;
             var rect = cameraFooter.getBoundingClientRect();
             dragMoved = false;
@@ -85,6 +99,18 @@
     modal.classList.remove('fixed', 'inset-0', 'p-4');
     modal.classList.add('absolute', 'z-20', 'rounded-3xl', 'bg-slate-50');
     function alignCameraModal() {
+        if (!modal.classList.contains('hidden') && isMobileScannerLayout()) {
+            if (modal.parentNode !== document.body) document.body.appendChild(modal);
+            modal.classList.add('camera-mobile-fullscreen');
+            modal.style.removeProperty('top');
+            modal.style.removeProperty('left');
+            modal.style.removeProperty('width');
+            modal.style.removeProperty('height');
+            modal.style.removeProperty('min-height');
+            return;
+        }
+        if (modal.parentNode !== scanApp) scanApp.appendChild(modal);
+        modal.classList.remove('camera-mobile-fullscreen');
         var appRect = scanApp.getBoundingClientRect();
         var frameRect = frame.getBoundingClientRect();
         modal.style.top = (frameRect.top - appRect.top) + 'px';
