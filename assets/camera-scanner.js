@@ -80,18 +80,8 @@
             if (dragMoved) {
                 suppressNextClick = true;
                 localStorage.setItem('sscCameraButtonPosition', JSON.stringify({left: cameraFooter.offsetLeft, top: cameraFooter.offsetTop}));
-            } else {
-                suppressNextClick = true;
-                if (modal.classList.contains('hidden')) openCamera();
-                else closeCamera();
             }
         });
-        cameraFooter.addEventListener('click', function (event) {
-            if (!suppressNextClick) return;
-            suppressNextClick = false;
-            event.preventDefault();
-            event.stopImmediatePropagation();
-        }, true);
     }
 
     var cameraPanel = modal.firstElementChild;
@@ -378,16 +368,15 @@
     window.addEventListener('beforeunload', function () { stopCameraScanner(); });
     window.addEventListener('ssc:camera-scan-complete', closeCamera);
     window.SSC_CAMERA_SCANNER = { open: openCamera, close: closeCamera, stop: stopCameraScanner };
-    cameraButton.addEventListener('click', capture(function () {
+    cameraButton.addEventListener('click', capture(function (event) {
+        if (suppressNextClick) {
+            suppressNextClick = false;
+            event.preventDefault();
+            return;
+        }
         if (modal.classList.contains('hidden')) openCamera();
         else closeCamera();
     }), true);
-    cameraButton.addEventListener('click', function () {
-        var wasHidden = modal.classList.contains('hidden');
-        window.setTimeout(function () {
-            if (wasHidden && modal.classList.contains('hidden')) openCamera();
-        }, 0);
-    });
     showScannerPanel();
     if (new URLSearchParams(window.location.search).get('camera') === '1') {
         window.addEventListener('load', openCamera, { once: true });
