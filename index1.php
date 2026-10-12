@@ -6,7 +6,7 @@ $homepage = $conn->query("WITH settings AS (
     SELECT
         COALESCE(MAX(setting_value) FILTER (WHERE setting_key='organization_name'), 'Student Entry and Exit Using a Barcode and SMS Integration System') AS organization_name,
         COALESCE(MAX(setting_value) FILTER (WHERE setting_key='overnight_events'), '0') AS overnight_events,
-        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='ticker_speed'), '30') AS ticker_speed
+        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='ticker_speed'), '60') AS ticker_speed
     FROM ssc_settings
 ), active_event AS (
     SELECT e.*
@@ -52,7 +52,7 @@ $registered = (int)$homepage['registered'];
 $incomingEvent = json_decode((string)($homepage['incoming_event'] ?? 'null'), true, 512, JSON_THROW_ON_ERROR);
 $todayEvent = json_decode((string)($homepage['today_event'] ?? 'null'), true, 512, JSON_THROW_ON_ERROR);
 $announcements = json_decode((string)$homepage['announcements'], true, 512, JSON_THROW_ON_ERROR);
-$tickerSpeed = max(10, min(90, (int)$homepage['ticker_speed']));
+$tickerSpeed = max(60, min(120, (int)$homepage['ticker_speed']));
 ?><!doctype html>
 <html lang="en">
 <head>

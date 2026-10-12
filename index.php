@@ -7,7 +7,7 @@ $homepage = $conn->query("WITH settings AS (
     SELECT
         COALESCE(MAX(setting_value) FILTER (WHERE setting_key='organization_name'), 'SSCAttendance') AS organization_name,
         COALESCE(MAX(setting_value) FILTER (WHERE setting_key='overnight_events'), '0') AS overnight_events,
-        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='ticker_speed'), '24') AS ticker_speed
+        COALESCE(MAX(setting_value) FILTER (WHERE setting_key='ticker_speed'), '60') AS ticker_speed
     FROM ssc_settings
 ), active_event AS (
     SELECT e.*
@@ -71,7 +71,7 @@ $displayEvent = $event ?: $todayEvent;
 $attendRate = $studentCount > 0 ? min(100, (int) round(($attendanceToday / $studentCount) * 100)) : 0;
 $dbConnected = true;
 $announcements = json_decode((string)$homepage['announcements'], true, 512, JSON_THROW_ON_ERROR);
-$tickerSpeed = max(12, min(80, (int)$homepage['ticker_speed']));
+$tickerSpeed = max(60, min(120, (int)$homepage['ticker_speed']));
 ?>
 <!doctype html>
 <html lang="en">
