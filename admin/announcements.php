@@ -78,8 +78,8 @@ ob_start();
         <?php else: ?>
           <?php foreach ($rows as $row): ?>
             <div class="rounded-xl border border-slate-200 p-4">
-              <div class="flex flex-wrap items-start justify-between gap-3">
-                <div>
+              <div class="flex items-start gap-3">
+                <div class="min-w-0 flex-1">
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600"><?php echo h($row['announcement_type']); ?></span>
                     <span class="rounded-full <?php echo $row['status'] === 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'; ?> px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.18em]">
@@ -88,21 +88,27 @@ ob_start();
                   </div>
                   <h3 class="mt-2 text-lg font-semibold text-slate-900"><?php echo h($row['title']); ?></h3>
                 </div>
-                <div class="flex gap-2">
-                  <a href="?edit=<?php echo (int)$row['id']; ?>" class="rounded-lg bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700">Edit</a>
-                  <form method="post" onsubmit="return confirm('Delete this announcement?');">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">
-                    <button class="rounded-lg bg-rose-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-rose-400">Delete</button>
-                  </form>
-                </div>
               </div>
-              <p class="mt-3 text-sm leading-6 text-slate-600"><?php echo nl2br(h($row['message'])); ?></p>
-              <div class="mt-3 flex flex-wrap gap-4 text-xs text-slate-500">
+              <p class="mt-3 break-words text-sm leading-6 text-slate-600"><?php echo nl2br(h($row['message'])); ?></p>
+              <div class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
                 <span>Priority: <?php echo (int)$row['priority']; ?></span>
                 <span>Sort: <?php echo (int)$row['sort_order']; ?></span>
                 <?php if ($row['starts_at']): ?><span>Starts: <?php echo h(date('M d, Y h:i A', strtotime($row['starts_at']))); ?></span><?php endif; ?>
                 <?php if ($row['ends_at']): ?><span>Ends: <?php echo h(date('M d, Y h:i A', strtotime($row['ends_at']))); ?></span><?php endif; ?>
+              </div>
+              <div class="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3">
+                <a href="?edit=<?php echo (int)$row['id']; ?>" class="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m16.862 4.487 2.651 2.651M4 20l4.5-.9L19.513 8.088a1.875 1.875 0 0 0-2.651-2.651L5.85 16.45 4 20Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Edit
+                </a>
+                <form method="post" onsubmit="return confirm('Delete this announcement?');">
+                  <input type="hidden" name="action" value="delete">
+                  <input type="hidden" name="id" value="<?php echo (int)$row['id']; ?>">
+                  <button class="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-700 transition hover:border-rose-300 hover:bg-rose-100" type="submit">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5.5 7l1 13h11l1-13M9 7V4h6v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Delete
+                  </button>
+                </form>
               </div>
             </div>
           <?php endforeach; ?>
