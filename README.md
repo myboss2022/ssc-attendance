@@ -49,6 +49,8 @@ After a successful send, the reset page displays a six-digit code entry form. In
 
 Vercel does not provide an official PHP runtime. This project uses the community-maintained `vercel-php` runtime; verify that runtime is available to your Vercel account before deploying. The `vercel.json` catch-all routes requests through `api/index.php`, which dispatches PHP pages and serves the app's static asset directories. On Vercel, PHP sessions are stored in the Supabase `app_sessions` table rather than a temporary function filesystem.
 
+The PHP function is pinned to Vercel's Singapore region (`sin1`) to keep dynamic requests close to users in the Philippines and Southeast Asia. For lowest database latency, set the function region to the same or nearest region as the Supabase project.
+
 Production URL: https://ssc-attendance-opal.vercel.app
 GitHub repository: https://github.com/myboss2022/ssc-attendance. Pushes to `main` automatically deploy to Vercel Production; other branches create Preview deployments.
 
