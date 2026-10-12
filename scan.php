@@ -22,7 +22,7 @@ if ($event) {
 @media(max-width:640px){body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}main{padding:.75rem!important}.scan-frame{height:16rem!important}.glass{border-radius:1rem!important;padding:1rem!important}.glass .flex.items-center.justify-between{align-items:flex-start;flex-direction:column;gap:.75rem}.glass .flex.items-center.justify-between>div:last-child{width:100%;display:flex;flex-wrap:wrap;gap:.5rem}.glass .flex.items-center.justify-between a,.glass .flex.items-center.justify-between button{flex:1;text-align:center}.glass table{font-size:.75rem}.glass th,.glass td{padding:.5rem}.glass .h-8{height:auto;min-height:2rem}.scan-zoom-row{align-items:flex-start!important;flex-direction:column!important}.scan-zoom-row #status{line-height:1.35}.scan-zoom-row #scanZoomBtn{width:100%;justify-content:center}.camera-footer{left:calc(.75rem + env(safe-area-inset-left));bottom:calc(.75rem + env(safe-area-inset-bottom))}}
 #scanLayout > #scanApp,
 #scanLayout > #recentPanel { min-width: 0; }
-@media(max-width:767px), (max-height:500px) and (pointer:coarse) {
+@media(max-width:767px), (max-height:500px) {
   #scanLayout {
     grid-template-columns: minmax(0, 1fr) !important;
     width: 100%;
