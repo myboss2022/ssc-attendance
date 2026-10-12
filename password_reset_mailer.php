@@ -44,15 +44,27 @@ function send_password_reset_code($recipient, $code)
     $host = trim((string)(getenv('GMAIL_SMTP_HOST') ?: 'smtp.gmail.com'));
     $port = (int)(getenv('GMAIL_SMTP_PORT') ?: 587);
 
-    if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)
-        || !filter_var($username, FILTER_VALIDATE_EMAIL)
-        || $appPassword === ''
-        || preg_match('/[\r\n]/', $appPassword)
-        || preg_match('/[\r\n]/', $fromName)
-        || !preg_match('/^[a-zA-Z0-9.-]+$/', $host)
-        || $port < 1
-        || $port > 65535) {
-        throw new RuntimeException('Password reset email settings are missing or invalid.');
+    $invalidSettings = [];
+    if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+        $invalidSettings[] = 'account email is invalid';
+    }
+    if (!filter_var($username, FILTER_VALIDATE_EMAIL)) {
+        $invalidSettings[] = 'GMAIL_SMTP_USER is missing or is not a valid email address';
+    }
+    if ($appPassword === '') {
+        $invalidSettings[] = 'GMAIL_SMTP_APP_PASSWORD is missing';
+    }
+    if (preg_match('/[\r\n]/', $fromName)) {
+        $invalidSettings[] = 'MAIL_FROM_NAME contains invalid line breaks';
+    }
+    if (!preg_match('/^[a-zA-Z0-9.-]+$/', $host)) {
+        $invalidSettings[] = 'GMAIL_SMTP_HOST is invalid';
+    }
+    if ($port < 1 || $port > 65535) {
+        $invalidSettings[] = 'GMAIL_SMTP_PORT is invalid';
+    }
+    if ($invalidSettings) {
+        throw new RuntimeException('Invalid password reset settings: '.implode('; ', $invalidSettings).'.');
     }
 
     $errno = 0;
