@@ -104,7 +104,7 @@ html,body{min-height:100%;overflow-x:hidden}
   .camera-preview{object-fit:cover!important;object-position:center center;background:#020617!important}
 </style>
 <link rel="stylesheet" href="assets/responsive.css?v=20261011-mobile2">
-<link rel="stylesheet" href="assets/scan-mobile.css?v=20261012-camera-icon">
+<link rel="stylesheet" href="assets/scan-mobile.css?v=20261012">
 </head>
 <body class="opacity-0 translate-y-1 text-slate-800">
 <div class="relative min-h-screen overflow-hidden"><div class="aurora a1"></div><div class="aurora a2"></div>
